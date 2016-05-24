@@ -4,7 +4,9 @@ __author__ = 'markus'
 import socket
 import replies
 import requestanalyzer
+import commands
 from exceptions import EvaluationError
+
 
 
 class ServerProtocol:
@@ -17,9 +19,10 @@ class ServerProtocol:
     def run(self):
             try:
                 request = requestanalyzer.RequestAnalyzer(self)
-                print request.request_method
-                print request.request_method_args
-                print request.parameters
+                cmdeval = commands.CommandEvaluator(request)
+
+                server_reply = cmdeval.get_command().execute("asd")
+                self.put_line(server_reply)
 
             except socket.error as sockerr:
                 if "timed out" in sockerr.message:
@@ -34,8 +37,8 @@ class ServerProtocol:
             except EvaluationError:
                 self.put_line(replies.Reply400().to_str())
 
-            except Exception:
-                self.put_line(replies.Reply500().to_str())
+            #except Exception:
+                #self.put_line(replies.Reply500().to_str())
 
     def get_current_line(self):
         return self.currentLine
@@ -48,5 +51,7 @@ class ServerProtocol:
         self.currentLine = line
 
     def put_line(self, line):
+        if not isinstance(line, str):
+            raise ValueError("Only Strings are supported for put_line")
         self.sock.sendall(line+"\n")
 

@@ -45,14 +45,15 @@ class RequestAnalyzer (object):
                 self.serverprotocol.readline()
                 self.request_stack.append(self.serverprotocol.get_current_line())
                 
-                #Abbruch-Bedingung (2x New line)
-                if len(self.request_stack) > 1 and self.request_stack[-1] == "\n" and self.request_stack[-2] == "\n":
+                # Abbruch-Bedingung fuer Lesevorgang (1x New line)
+                if len(self.request_stack) > 1 and self.request_stack[-1] == "\n":
                     break
 
-            #Solange lesen bis nichts mehr verfuegbar ist
+
+            # Solange lesen bis nichts mehr verfuegbar ist
             except IOError as exc:
                 raise exc
-            #Alle anderen durchreichen
+            # Alle anderen durchreichen
             except Exception as exc:
                 raise exc
 
@@ -86,12 +87,17 @@ class RequestAnalyzer (object):
 
         for params in current_stack:
             parts = params.split(":")
+
+            # Parameters sind fehlerhaft
+            if len(parts) != 2:
+                raise EvaluationError()
+
             key = parts[0].strip()
             value = parts[1].strip()
 
             if not key or not value:
                 raise EvaluationError()
 
-
             self.parameters[key] = value
+
 
