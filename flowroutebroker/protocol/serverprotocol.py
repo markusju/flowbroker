@@ -10,6 +10,9 @@ from exceptions import AuthError
 
 
 class ServerProtocol (object):
+    """
+    Flow Route Broker Protocol Implementation
+    """
 
     def __init__(self, sock, sockfile, addr, api):
         self.sock = sock  # type: socket.socket
@@ -46,9 +49,18 @@ class ServerProtocol (object):
                 #self.put_line(replies.Reply500().to_str())
 
     def get_current_line(self):
+        """
+        Returns the last line that was read
+        :return:
+        """
         return self.currentLine
 
     def readline(self):
+        """
+        Reads the next line
+        Raises IOError when no more lines are available
+        :return:
+        """
         line = self.sockfile.readline()
         # Remove Newline from Content
         if not line:
@@ -56,6 +68,11 @@ class ServerProtocol (object):
         self.currentLine = line
 
     def put_line(self, line):
+        """
+        Puts a new line
+        :param line:
+        :return:
+        """
         if not isinstance(line, str):
             raise ValueError("Only Strings are supported for put_line")
         self.sock.sendall(line+"\n")

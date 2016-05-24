@@ -9,6 +9,9 @@ from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
 
 
 class CommandFactory:
+    """
+    Provides Instances of Commands
+    """
 
     def __init__(self, requestanalyzer):
         if not isinstance(requestanalyzer, RequestAnalyzer):

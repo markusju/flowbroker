@@ -5,6 +5,10 @@ import exabgp
 
 
 class ParameterEvaluator:
+    """
+    Evaluation of ProtocolParameters
+    Applies Parameters from FlowBroker Protocol to a flowroute
+    """
 
     def __init__(self, flowroute, param_list):
         if not isinstance(flowroute, exabgp.FlowRoute):
@@ -15,6 +19,9 @@ class ParameterEvaluator:
         self.param_list = param_list
         self.params = {
             "Destination-Address": self.__destination_address,
+            "Port": self.__port,
+            "Source-Port": self.__source_port,
+            "Destination-Port": self.__destination_port,
             "Protocol": self.__protocol,
             "Unsupported": self.__unsuported
         }
@@ -35,6 +42,15 @@ class ParameterEvaluator:
 
     def __destination_address(self, value):
         self.flowroute.destination_address = value
+
+    def __port(self, value):
+        self.flowroute.port = value
+
+    def __source_port(self, value):
+        self.flowroute.source_port = value
+
+    def __destination_port(self, value):
+        self.flowroute.destination_port = value
 
     def __protocol(self, value):
         self.flowroute.protocol = value
