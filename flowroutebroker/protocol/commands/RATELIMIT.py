@@ -1,8 +1,8 @@
 __author__ = 'markus'
 
 from abstractcommand import AbstractCommand
-from .. import replies
-from ..exceptions import EvaluationError
+from flowroutebroker.protocol import replies
+from flowroutebroker.protocol.exceptions import EvaluationError
 
 
 class RATELIMIT (AbstractCommand):

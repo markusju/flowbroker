@@ -1,13 +1,14 @@
 __author__ = 'markus'
 
-from abstractcommand import AbstractCommand
 from DISCARD import DISCARD
 from RATELIMIT import RATELIMIT
 from UNSUPPORTED import UNSUPPORTED
-from ..requestanalyzer import RequestAnalyzer
+from abstractcommand import AbstractCommand
+
+from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
 
 
-class CommandEvaluator:
+class CommandFactory:
 
     def __init__(self, requestanalyzer):
         if not isinstance(requestanalyzer, RequestAnalyzer):

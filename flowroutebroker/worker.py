@@ -21,7 +21,8 @@ class Worker (threading.Thread):
 
     def run(self):
         try:
-            protocol.ServerProtocol(self.sock, self.sockfile).run()
+            print self.addr
+            protocol.ServerProtocol(self.sock, self.sockfile, self.addr, self.api).run()
         finally:
             self.sockfile.close()
             self.sock.close()

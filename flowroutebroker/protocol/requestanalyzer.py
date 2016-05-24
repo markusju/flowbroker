@@ -24,6 +24,14 @@ class RequestAnalyzer (object):
 
 
     @property
+    def client_port(self):
+        return self.serverprotocol.get_addr[1]
+
+    @property
+    def client_ip(self):
+        return self.serverprotocol.get_addr[0]
+
+    @property
     def request_method(self):
         return self._request_method
 

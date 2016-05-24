@@ -6,22 +6,24 @@ import replies
 import requestanalyzer
 import commands
 from exceptions import EvaluationError
+from exceptions import AuthError
 
 
+class ServerProtocol (object):
 
-class ServerProtocol:
-
-    def __init__(self, sock, sockfile):
+    def __init__(self, sock, sockfile, addr, api):
         self.sock = sock  # type: socket.socket
         self.sockfile = sockfile  # type: socket._fileobject
+        self.api = api
+        self._addr = addr
         self.currentLine = None
 
     def run(self):
             try:
                 request = requestanalyzer.RequestAnalyzer(self)
-                cmdeval = commands.CommandEvaluator(request)
+                cmdeval = commands.CommandFactory(request)
 
-                server_reply = cmdeval.get_command().execute("asd")
+                server_reply = cmdeval.get_command().execute(self.api)
                 self.put_line(server_reply)
 
             except socket.error as sockerr:
@@ -30,12 +32,15 @@ class ServerProtocol:
                 else:
                     self.put_line(replies.Reply500().to_str())
 
-            except IOError:
-                # Client disconnected
-                pass
+            except AuthError:
+                self.put_line(replies.Reply403().to_str())
 
             except EvaluationError:
                 self.put_line(replies.Reply400().to_str())
+
+            except IOError:
+                # Client disconnected
+                pass
 
             #except Exception:
                 #self.put_line(replies.Reply500().to_str())
@@ -55,3 +60,11 @@ class ServerProtocol:
             raise ValueError("Only Strings are supported for put_line")
         self.sock.sendall(line+"\n")
 
+    @property
+    def get_addr(self):
+        """
+        Returns Address Tuple from socket
+        (<IP>, <Port>)
+        :return:
+        """
+        return self._addr

@@ -4,6 +4,9 @@ import re
 import inspect
 
 class FlowRoute(object):
+    """
+    Representation of EXABGP's flow route syntax
+    """
 
     def __init__(self):
         self._ip_pattern = re.compile(
@@ -170,7 +173,6 @@ class FlowRoute(object):
         flow_route.append(self.filter_action)
         flow_route.append("; ")
         flow_route.append("} ")
-
 
         flow_route.append("}")
 
