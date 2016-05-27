@@ -3,6 +3,7 @@ __author__ = 'markus'
 from DISCARD import DISCARD
 from RATELIMIT import RATELIMIT
 from UNSUPPORTED import UNSUPPORTED
+from VERSION import VERSION
 from abstractcommand import AbstractCommand
 
 from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
@@ -22,6 +23,7 @@ class CommandFactory:
         self.cmdmap = {
             "DISCARD": lambda x: DISCARD(x),
             "RATELIMIT": lambda x: RATELIMIT(x),
+            "VERSION": lambda x: VERSION(x),
             "UNSUPPORTED": lambda x: UNSUPPORTED(x)
         }
 

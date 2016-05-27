@@ -2,6 +2,7 @@ __author__ = 'markus'
 
 
 import exabgp
+from flowroutebroker.protocol.exceptions import SemanticError
 
 
 class ParameterEvaluator:
@@ -37,7 +38,7 @@ class ParameterEvaluator:
             if paramkey not in self.params:
                 self.params["Unsupported"](paramvalue)
                 continue
-                
+
             self.params[paramkey](paramvalue)
 
     def __destination_address(self, value):
@@ -54,7 +55,6 @@ class ParameterEvaluator:
 
     def __protocol(self, value):
         self.flowroute.protocol = value
-
 
     def __unsuported(self, value):
         pass

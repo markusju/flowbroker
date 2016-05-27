@@ -117,7 +117,7 @@ class FlowRoute(object):
         if not self._is_valid_ip_cidr(value):
             raise ValueError("Invalid IP/CIDR")
 
-    def countMatchCriteria(self):
+    def count_match_criteria(self):
         match_crit = [self.protocol, self.destination_address, self.source_address, self.port, self.source_port, self.destination_port]
         count_match_crit = 0
 
@@ -126,19 +126,19 @@ class FlowRoute(object):
                 count_match_crit += 1
         return count_match_crit
 
-    def isFilterActionSet(self):
+    def is_filter_action_set(self):
         return self.filter_action is not False
 
-    def buildRoute(self):
-        if not self.isFilterActionSet():
+    def build_route(self):
+        if not self.is_filter_action_set():
             raise Exception("No FilterAction specified. Cannot build route")
 
-        if self.countMatchCriteria() < 1:
+        if self.count_match_criteria() < 1:
             raise Exception("No Match Criteria specified. Cannot build route")
 
         flow_route = []
 
-        flow_route.append("flow route " +self.name+ " { ")
+        flow_route.append("flow route " + self.name + " { ")
 
         flow_route.append("match { ")
 
@@ -179,4 +179,4 @@ class FlowRoute(object):
         return str.join("", flow_route)
 
     def __str__(self):
-        return self.buildRoute()
+        return self.build_route()

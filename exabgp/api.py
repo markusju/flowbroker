@@ -29,7 +29,7 @@ class Api ():
         """
         if not isinstance(flowroute, FlowRoute):
             raise ValueError("Argument must be instance of FlowRoute")
-        self.stdoutwriter.addCommand("announce "+flowroute.buildRoute())
+        self.stdoutwriter.addCommand("announce "+flowroute.build_route())
 
     def withdraw_flow_route(self, flowroute):
         """
@@ -39,7 +39,7 @@ class Api ():
         """
         if not isinstance(flowroute, FlowRoute):
             raise ValueError("Argument must be instance of FlowRoute")
-        self.stdoutwriter.addCommand("withdraw "+flowroute.buildRoute())
+        self.stdoutwriter.addCommand("withdraw "+flowroute.build_route())
 
     def __execute_command_get_reply(self, cmd):
         """

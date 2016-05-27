@@ -6,6 +6,7 @@ import replies
 import requestanalyzer
 import commands
 from exceptions import EvaluationError
+from exceptions import SemanticError
 from exceptions import AuthError
 
 
@@ -23,7 +24,9 @@ class ServerProtocol (object):
 
     def run(self):
             try:
+                # Syntactical Analysis of the Request
                 request = requestanalyzer.RequestAnalyzer(self)
+                # Se
                 cmdeval = commands.CommandFactory(request)
 
                 server_reply = cmdeval.get_command().execute(self.api)
@@ -41,12 +44,15 @@ class ServerProtocol (object):
             except EvaluationError:
                 self.put_line(replies.Reply400().to_str())
 
+            except SemanticError:
+                self.put_line(replies.Reply422().to_str())
+
             except IOError:
                 # Client disconnected
                 pass
 
-            #except Exception:
-                #self.put_line(replies.Reply500().to_str())
+            #except Exception as err:
+                #self.put_line(replies.Reply500(err.message).to_str())
 
     def get_current_line(self):
         """
