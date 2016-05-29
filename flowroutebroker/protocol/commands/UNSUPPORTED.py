@@ -7,7 +7,7 @@ from flowroutebroker.protocol import replies
 
 class UNSUPPORTED(AbstractCommand):
     def execute(self, api):
-        return replies.Reply501().to_str()
+        return replies.Reply501()
 
     def get_method(self):
         raise NotImplementedError

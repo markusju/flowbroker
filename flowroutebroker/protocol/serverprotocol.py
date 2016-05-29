@@ -26,26 +26,26 @@ class ServerProtocol (object):
             try:
                 # Syntactical Analysis of the Request
                 request = requestanalyzer.RequestAnalyzer(self)
-                # Se
+                # Semantic Analsysis ot the request
                 cmdeval = commands.CommandFactory(request)
 
                 server_reply = cmdeval.get_command().execute(self.api)
-                self.put_line(server_reply)
+                self.put_reply(server_reply)
 
             except socket.error as sockerr:
                 if "timed out" in sockerr.message:
-                    self.put_line(replies.Reply408().to_str())
+                    self.put_reply(replies.Reply408())
                 else:
-                    self.put_line(replies.Reply500().to_str())
+                    self.put_reply(replies.Reply500())
 
             except AuthError:
-                self.put_line(replies.Reply403().to_str())
+                self.put_reply(replies.Reply403())
 
             except EvaluationError:
-                self.put_line(replies.Reply400().to_str())
+                self.put_reply(replies.Reply400())
 
             except SemanticError:
-                self.put_line(replies.Reply422().to_str())
+                self.put_reply(replies.Reply422())
 
             except IOError:
                 # Client disconnected
@@ -82,6 +82,11 @@ class ServerProtocol (object):
         if not isinstance(line, str):
             raise ValueError("Only Strings are supported for put_line")
         self.sock.sendall(line+"\n")
+
+    def put_reply(self, reply):
+        if not isinstance(reply, replies.AbstractReply):
+            raise ValueError("Only AbstractReplies are supported for put_reply")
+        self.put_line(reply.to_str())
 
     @property
     def get_addr(self):

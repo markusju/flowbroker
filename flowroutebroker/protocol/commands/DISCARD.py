@@ -12,6 +12,7 @@ import exabgp
 
 class DISCARD (AbstractCommand):
     def execute(self, api):
+
         # DISCARD requires at least one Request Method Argument
         if len(self.requestanalyzer.request_method_args) != 1:
             raise EvaluationError()
@@ -36,8 +37,7 @@ class DISCARD (AbstractCommand):
 
         api.announce_flow_route(flowroute)
 
-        return replies.Reply200().to_str()
-
+        return replies.Reply200()
 
     def get_method(self):
         pass

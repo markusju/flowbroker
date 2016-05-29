@@ -71,17 +71,15 @@ class AbstractReply:
         output_buff = [str(self.get_code()) + " " + str(self.get_message())]
 
         # Are there Parameters in the dict?
-        if self.get_paramters() is not False:
+        if bool(self.get_paramters()) is not False:
             for paramkey, paramvalue in self.parameters.items():
                 output_buff.append("\n")
                 output_buff.append(paramkey + ": " + paramvalue)
 
         # Is there a payload?
-        if self.get_payload() is not False:
+        if bool(self.get_payload()) is not False:
             output_buff.append("\n\n")
             output_buff.append(self.get_payload())
-
-
 
         return str.join("", output_buff)
 

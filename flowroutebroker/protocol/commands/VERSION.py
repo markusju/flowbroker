@@ -15,11 +15,11 @@ class VERSION (AbstractCommand):
         if len(self.requestanalyzer._request_method_args) != 0:
             raise EvaluationError()
 
-        return replies.Reply200("blah").to_str()
+        return replies.Reply200("blah", {"asdasd": "2323"})
 
         version = api.get_version()
 
-        return replies.Reply200(version).to_str()
+        return replies.Reply200(version)
 
     def get_method(self):
         pass

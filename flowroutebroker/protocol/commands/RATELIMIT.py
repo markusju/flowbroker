@@ -22,7 +22,7 @@ class RATELIMIT (AbstractCommand):
 
 
 
-        return replies.Reply200().to_str()
+        return replies.Reply200()
 
     def get_method(self):
         pass
