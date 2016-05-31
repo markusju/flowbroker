@@ -14,6 +14,12 @@ class FlowRoute(object):
             "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
             "(\/([0-9]|[1-2][0-9]|3[0-2]))$")
 
+        self.port_range_pattern = re.compile(
+            "(^>([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])"
+            "&<([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$)"
+            "|(^=([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$)"
+        )
+
         self._action_pattern = re.compile("^(discard|rate-limit [0-9]+)$")
 
         self._name = ""
@@ -23,6 +29,9 @@ class FlowRoute(object):
         self._port = ""
         self._source_port = ""
         self._destination_port = ""
+        self._icmp_type = ""
+        self._icmp_code = ""
+        self._tcp_flags = ""
         self._filter_action = ""
 
     @property
@@ -57,9 +66,8 @@ class FlowRoute(object):
 
     @protocol.setter
     def protocol(self, value):
-        if value not in ["tcp", "udp"]:
-            raise ValueError("Invalid protocol")
-        self._protocol = value
+        allowed_prot = ["tcp", "udp"]
+        self._protocol = self._check_allowed_values_str_and_list(allowed_prot, value)
 
     @property
     def port(self):
@@ -94,6 +102,77 @@ class FlowRoute(object):
     def source_port(self, value):
         self._source_port = value
 
+    @property
+    def icmp_type(self):
+        return self._icmp_type
+
+    @icmp_type.setter
+    def icmp_type(self, value):
+        self._icmp_type = self._check_allowed_values_str_and_list(
+            ["echo-reply", "echo-request", "info-reply", "info-request", "mask-reply",
+             "mask-request", "parameter-problem", "redirect", "router-advertisement",
+             "router-solicit", "source-quench", "time-exceeded", "timestamp", "timestamp-reply",
+             "unreachable"],
+            value
+        )
+
+    @property
+    def icmp_code(self):
+        return self._icmp_code
+
+    @icmp_code.setter
+    def icmp_code(self, value):
+        self._icmp_code = self._check_allowed_values_str_and_list(
+            ["communication-prohibited-by-filtering", "destination-host-prohibited ", "destination-host-unknown ",
+             "destination-network-unknown ", "fragmentation-needed ", "host-precedence-violation",
+             "ip-header-bad", "network-unreachable","network-unreachable-for-tos ",
+             "port-unreachable", "redirect-for-host","redirect-for-network",
+             "redirect-for-tos-and-host", "redirect-for-tos-and-net", "required-option-missing",
+             "source-host-isolated", "source-route-failed", "ttl-eq-zero-during-reassembly",
+             "ttl-eq-zero-during-transit"],
+            value
+        )
+    @property
+    def tcp_flags(self):
+        return self._tcp_flags
+
+    @tcp_flags.setter
+    def tcp_flags(self, value):
+        self._tcp_flags = self._check_allowed_values_str_and_list(
+            ["fin", "syn", "rst", "push", "ack", "urgent"],
+            value
+        )
+
+    @property
+    def packet_length(self):
+        raise NotImplementedError()
+        pass
+
+    @packet_length.setter
+    def packet_length(self, value):
+        raise NotImplementedError()
+        pass
+
+    @property
+    def dscp(self):
+        raise NotImplementedError()
+        pass
+
+    @dscp.setter
+    def dscp(self, value):
+        raise NotImplementedError()
+        pass
+
+    @property
+    def fragment(self):
+        raise NotImplementedError()
+        pass
+
+    @fragment.setter
+    def fragment(self, value):
+        raise NotImplementedError()
+        pass
+
     def _is_valid_action(self, value):
         return self._action_pattern.match(value)
 
@@ -117,6 +196,27 @@ class FlowRoute(object):
         """
         if not self._is_valid_ip_cidr(value):
             raise ValueError("Invalid IP/CIDR")
+
+    def _check_allowed_values_str_and_list(self, allowed_vals, input):
+        if type(input) is not list and input not in allowed_vals:
+            raise ValueError("Invalid Value")
+
+        # Check if supplied var is list and whether it is a subset of the allowed arguments
+        if type(input) is list and not (set(input) <= set(allowed_vals)) or bool(input) is False:
+            raise ValueError("Invalid Value")
+
+        if isinstance(input, list):
+            # If list only contains one value..
+            if len(input) == 1:
+                return input[0]
+            output_buff = ["["]
+            for el in input:
+                output_buff.append(" ")
+                output_buff.append(el)
+            output_buff.append(" ]")
+            return str.join("", output_buff)
+
+        return input
 
     def count_match_criteria(self):
         match_crit = [self.protocol, self.destination_address, self.source_address, self.port, self.source_port, self.destination_port]
@@ -166,6 +266,11 @@ class FlowRoute(object):
         if self.protocol:
             flow_route.append("protocol ")
             flow_route.append(self.protocol)
+            flow_route.append("; ")
+
+        if self.icmp_type:
+            flow_route.append("icmp-type ")
+            flow_route.append(self.icmp_type)
             flow_route.append("; ")
 
         flow_route.append("} ")
