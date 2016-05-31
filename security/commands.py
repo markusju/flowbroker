@@ -2,7 +2,7 @@ __author__ = 'markus'
 
 
 import exabgp
-from flowroutebroker.protocol.exceptions import AuthError
+from flowroutebroker.protocol.exceptions import PermError
 
 
 def check_flowroute(flowroute, client_ip):
@@ -10,4 +10,4 @@ def check_flowroute(flowroute, client_ip):
         raise ValueError("Must be of type FlowRoute")
 
     if flowroute.destination_address != client_ip+"/32":
-        raise AuthError()
+        raise PermError()

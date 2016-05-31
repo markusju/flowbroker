@@ -49,6 +49,16 @@ class AbstractReply:
         """
         pass
 
+    def add_parameter(self, key, value):
+        """
+        Adds a parameter to the Reply's pre-set paramters.
+        Overwrites existing entries with NO WARNING!
+        :param key:
+        :param value:
+        :return:
+        """
+        self.parameters[key] = value
+
     def get_paramters(self):
         """
         Returns a dict containing all parameters associated with this reply
@@ -63,7 +73,7 @@ class AbstractReply:
         """
         return self.payload
 
-    def to_str(self):
+    def to_str(self, omit_signature = False):
         """
         Returns a String Representation of the Reply
         :return:
@@ -73,6 +83,8 @@ class AbstractReply:
         # Are there Parameters in the dict?
         if bool(self.get_paramters()) is not False:
             for paramkey, paramvalue in self.parameters.items():
+                if omit_signature and paramkey == "Signature":
+                    continue
                 output_buff.append("\n")
                 output_buff.append(paramkey + ": " + paramvalue)
 

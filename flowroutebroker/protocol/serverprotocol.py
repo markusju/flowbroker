@@ -5,8 +5,10 @@ import socket
 import replies
 import requestanalyzer
 import commands
+import security
 from exceptions import EvaluationError
 from exceptions import SemanticError
+from exceptions import PermError
 from exceptions import AuthError
 
 
@@ -21,6 +23,7 @@ class ServerProtocol (object):
         self.api = api
         self._addr = addr
         self.currentLine = None
+        self.sechandler = security.MacHandler("secret")
 
     def run(self):
             try:
@@ -38,8 +41,11 @@ class ServerProtocol (object):
                 else:
                     self.put_reply(replies.Reply500())
 
-            except AuthError:
+            except PermError:
                 self.put_reply(replies.Reply403())
+
+            except AuthError:
+                self.put_reply(replies.Reply401())
 
             except EvaluationError:
                 self.put_reply(replies.Reply400())
@@ -50,7 +56,7 @@ class ServerProtocol (object):
             except IOError:
                 # Client disconnected
                 pass
-
+            # TODO:
             #except Exception as err:
                 #self.put_line(replies.Reply500(err.message).to_str())
 
@@ -83,9 +89,12 @@ class ServerProtocol (object):
             raise ValueError("Only Strings are supported for put_line")
         self.sock.sendall(line+"\n")
 
-    def put_reply(self, reply):
+    def put_reply(self, reply, sign_reply=True):
         if not isinstance(reply, replies.AbstractReply):
             raise ValueError("Only AbstractReplies are supported for put_reply")
+        if sign_reply:
+            self.sechandler.apply_to_reply(reply)
+
         self.put_line(reply.to_str())
 
     @property
