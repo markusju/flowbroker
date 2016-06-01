@@ -32,6 +32,9 @@ class FlowRoute(object):
         self._flow_icmp_type = ""
         self._flow_icmp_code = ""
         self._flow_tcp_flags = ""
+        self._flow_packet_length = ""
+        self._flow_fragment = ""
+        self._flow_dscp = ""
         self._flow_filter_action = ""
 
     @property
@@ -75,7 +78,7 @@ class FlowRoute(object):
 
     @port.setter
     def port(self, value):
-        self._flow_port =  self._check_allowed_values_regexp(self.port_range_pattern, value)
+        self._flow_port = self._check_allowed_values_regexp(self.port_range_pattern, value)
 
     @property
     def filter_action(self):
@@ -146,30 +149,33 @@ class FlowRoute(object):
 
     @property
     def packet_length(self):
-        pass
+        return self._flow_packet_length
 
     @packet_length.setter
     def packet_length(self, value):
-        raise NotImplementedError()
-        pass
+        #TODO: Checks
+        self._flow_packet_length = value
 
     @property
     def dscp(self):
-        pass
+        return self._flow_dscp
 
     @dscp.setter
     def dscp(self, value):
-        raise NotImplementedError()
-        pass
+        # TODO: checks
+        self._flow_dscp = value
 
     @property
     def fragment(self):
-        pass
+        # TODO: Checks
+        return self._flow_fragment
 
     @fragment.setter
     def fragment(self, value):
-        raise NotImplementedError()
-        pass
+        self._flow_fragment = self._check_allowed_values(["not-a-fragment", "dont-fragment",
+                                                          "is-fragment", "first-fragment",
+                                                          "last-fragment"],
+                                                         value)
 
     def _is_valid_action(self, value):
         return self._action_pattern.match(value)
@@ -260,7 +266,8 @@ class FlowRoute(object):
         :return:
         """
         match_crit = [self.protocol, self.destination_address, self.source_address,
-                      self.port, self.source_port, self.destination_port, self.icmp_code, self.icmp_type]
+                      self.port, self.source_port, self.destination_port, self.icmp_code,
+                      self.icmp_type, self.tcp_flags, self.fragment]
 
         count_match_crit = 0
         for crit in match_crit:
@@ -318,6 +325,21 @@ class FlowRoute(object):
         if self.icmp_type:
             flow_route.append("icmp-type ")
             flow_route.append(self.icmp_type)
+            flow_route.append("; ")
+
+        if self.icmp_code:
+            flow_route.append("icmp-code ")
+            flow_route.append(self.icmp_code)
+            flow_route.append("; ")
+
+        if self.tcp_flags:
+            flow_route.append("tcp-flags ")
+            flow_route.append(self.tcp_flags)
+            flow_route.append("; ")
+
+        if self.fragment:
+            flow_route.append("fragment ")
+            flow_route.append(self.fragment)
             flow_route.append("; ")
 
         flow_route.append("} ")

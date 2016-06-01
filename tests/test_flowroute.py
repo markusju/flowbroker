@@ -121,5 +121,23 @@ class FlowRouteTest(TestCase):
         self.flowroute.filter_action = "discard"
         self.assertEquals(str(self.flowroute), "flow route  { match { protocol [ tcp udp ]; } then { discard; } }")
 
+    def test_icmp_code(self):
+        self.flowroute.icmp_code = "port-unreachable"
+        self.flowroute.filter_action = "discard"
+        self.assertEquals(str(self.flowroute), "flow route  { match { icmp-code port-unreachable; } then { discard; } }")
 
+    def test_icmp_type(self):
+        self.flowroute.icmp_type = "echo-reply"
+        self.flowroute.filter_action = "discard"
+        self.assertEquals(str(self.flowroute), "flow route  { match { icmp-type echo-reply; } then { discard; } }")
+
+    def test_tcp_flags(self):
+        self.flowroute.tcp_flags = "rst"
+        self.flowroute.filter_action = "discard"
+        self.assertEquals(str(self.flowroute), "flow route  { match { tcp-flags rst; } then { discard; } }")
+
+    def test_fragment(self):
+        self.flowroute.fragment = "not-a-fragment"
+        self.flowroute.filter_action = "discard"
+        self.assertEquals(str(self.flowroute), "flow route  { match { fragment not-a-fragment; } then { discard; } }")
 
