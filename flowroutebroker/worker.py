@@ -20,6 +20,10 @@ class Worker (threading.Thread):
         self.api = api
 
     def run(self):
+        """
+        Starts a worker process and instantiates a new Protocol session
+        :return:
+        """
         try:
             protocol.ServerProtocol(self.sock, self.sockfile, self.addr, self.api).run()
         finally:

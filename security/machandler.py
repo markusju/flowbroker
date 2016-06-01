@@ -2,12 +2,20 @@ __author__ = 'markus'
 
 from flowroutebroker.protocol.replies import AbstractReply
 from mac import MessageAuthenticationCode
+from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
 import datetime
+from flowroutebroker.protocol.exceptions import AuthError
 
 
 class MacHandler:
 
     def __init__(self, secret):
+        """
+        Returns an object, which can be integrated into the protocol processing chain.
+        Adds Signatures to Requests and verifies Signatures in Requests
+        :param secret:
+        :return:
+        """
         self.mac = MessageAuthenticationCode(secret)
 
     def apply_to_reply(self, reply):
@@ -26,4 +34,17 @@ class MacHandler:
         :param request:
         :return:
         """
-        pass
+        if not isinstance(request, RequestAnalyzer):
+            raise ValueError("request must be instance of RequestAnalyzer")
+
+        try:
+            date = request.parameters["Date"]
+            signature = request.parameters["Signature"]
+
+            # TODO: Check Date
+
+            # TODO: Check Signature
+
+        except KeyError:
+            raise AuthError()
+

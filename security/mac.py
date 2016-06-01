@@ -8,6 +8,12 @@ from flowroutebroker.protocol.exceptions import AuthError
 class MessageAuthenticationCode:
 
     def __init__(self, secret):
+        """
+        Instantiates an instance of the MessageAuthenticationCode Class
+        Allows for both checking and generating Hash-Codes based on a given secret.
+        :param secret:
+        :return:
+        """
         self.secret = secret
         pass
 
@@ -25,8 +31,9 @@ class MessageAuthenticationCode:
         :param message:
         :return:
         """
-        # Avoid timing attacks...
+
         calc_mac = self.get_mac_for_message(message)
+        # Avoid timing attacks...
         if not hmac.compare_digest(supplied_mac, calc_mac):
             raise AuthError()
         pass

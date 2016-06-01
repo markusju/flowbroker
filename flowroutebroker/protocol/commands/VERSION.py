@@ -8,11 +8,8 @@ from flowroutebroker.protocol.exceptions import EvaluationError
 class VERSION (AbstractCommand):
     def execute(self, api):
 
-        # RATELIMIT requires at least one Request Method Argument
+        # VERSION requires at least one Request Method Argument
         if len(self.requestanalyzer.request_method_args) != 0:
-            raise EvaluationError()
-
-        if len(self.requestanalyzer._request_method_args) != 0:
             raise EvaluationError()
 
         return replies.Reply200("blah", {"asdasd": "2323"})

@@ -16,7 +16,6 @@ class ServerProtocol (object):
     """
     Flow Route Broker Protocol Implementation
     """
-
     def __init__(self, sock, sockfile, addr, api):
         self.sock = sock  # type: socket.socket
         self.sockfile = sockfile  # type: socket._fileobject
@@ -26,39 +25,53 @@ class ServerProtocol (object):
         self.sechandler = security.MacHandler("secret")
 
     def run(self):
-            try:
-                # Syntactical Analysis of the Request
-                request = requestanalyzer.RequestAnalyzer(self)
-                # Semantic Analsysis ot the request
-                cmdeval = commands.CommandFactory(request)
+        """
+        Processes a incoming Request and issues a reply to the client
+        :return:
+        """
+        try:
+            # Syntactical Analysis of the Request
+            request = requestanalyzer.RequestAnalyzer(self)
 
-                server_reply = cmdeval.get_command().execute(self.api)
-                self.put_reply(server_reply)
+            # Security Checks (Session Layer)
+            # self.sechandler.check_request(request)
 
-            except socket.error as sockerr:
-                if "timed out" in sockerr.message:
-                    self.put_reply(replies.Reply408())
-                else:
-                    self.put_reply(replies.Reply500())
+            # Semantic Analsysis ot the request
+            cmdeval = commands.CommandFactory(request)
 
-            except PermError:
-                self.put_reply(replies.Reply403())
+            # Attempting to execute the command
+            server_reply = cmdeval.get_command().execute(self.api)
 
-            except AuthError:
-                self.put_reply(replies.Reply401())
+            # Apply Signatures
+            self.sechandler.apply_to_reply(server_reply)
 
-            except EvaluationError:
-                self.put_reply(replies.Reply400())
+            # Transmitting the Reply
+            self.put_reply(server_reply)
 
-            except SemanticError:
-                self.put_reply(replies.Reply422())
+        except socket.error as sockerr:
+            if "timed out" in sockerr.message:
+                self.put_reply(replies.Reply408())
+            else:
+                self.put_reply(replies.Reply500())
 
-            except IOError:
-                # Client disconnected
-                pass
-            # TODO:
-            #except Exception as err:
-                #self.put_line(replies.Reply500(err.message).to_str())
+        except PermError:
+            self.put_reply(replies.Reply403())
+
+        except AuthError:
+            self.put_reply(replies.Reply401())
+
+        except EvaluationError:
+            self.put_reply(replies.Reply400())
+
+        except SemanticError:
+            self.put_reply(replies.Reply422())
+
+        except IOError:
+            # Client disconnected
+            pass
+        # TODO:
+        #except Exception as err:
+            #self.put_line(replies.Reply500(err.message).to_str())
 
     def get_current_line(self):
         """
@@ -89,12 +102,14 @@ class ServerProtocol (object):
             raise ValueError("Only Strings are supported for put_line")
         self.sock.sendall(line+"\n")
 
-    def put_reply(self, reply, sign_reply=True):
+    def put_reply(self, reply):
+        """
+        Sends a reply to the client
+        :param reply:
+        :return:
+        """
         if not isinstance(reply, replies.AbstractReply):
             raise ValueError("Only AbstractReplies are supported for put_reply")
-        if sign_reply:
-            self.sechandler.apply_to_reply(reply)
-
         self.put_line(reply.to_str())
 
     @property

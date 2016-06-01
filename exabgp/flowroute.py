@@ -22,93 +22,93 @@ class FlowRoute(object):
 
         self._action_pattern = re.compile("^(discard|rate-limit [0-9]+)$")
 
-        self._name = ""
-        self._source_address = ""
-        self._destination_address = ""
-        self._protocol = ""
-        self._port = ""
-        self._source_port = ""
-        self._destination_port = ""
-        self._icmp_type = ""
-        self._icmp_code = ""
-        self._tcp_flags = ""
-        self._filter_action = ""
+        self._flow_name = ""
+        self._flow_source_address = ""
+        self._flow_destination_address = ""
+        self._flow_protocol = ""
+        self._flow_port = ""
+        self._flow_source_port = ""
+        self._flow_destination_port = ""
+        self._flow_icmp_type = ""
+        self._flow_icmp_code = ""
+        self._flow_tcp_flags = ""
+        self._flow_filter_action = ""
 
     @property
     def name(self):
-        return self._name
+        return self._flow_name
 
     @name.setter
     def name(self, value):
-        self._name = value
+        self._flow_name = value
 
     @property
     def destination_address(self):
-        return self._destination_address
+        return self._flow_destination_address
 
     @destination_address.setter
     def destination_address(self, value):
         self._check_valid_ip_cidr(value)
-        self._destination_address = value
+        self._flow_destination_address = value
 
     @property
     def source_address(self):
-        return self._source_address
+        return self._flow_source_address
 
     @source_address.setter
     def source_address(self, value):
         self._check_valid_ip_cidr(value)
-        self._source_address = value
+        self._flow_source_address = value
 
     @property
     def protocol(self):
-        return self._protocol
+        return self._flow_protocol
 
     @protocol.setter
     def protocol(self, value):
         allowed_prot = ["tcp", "udp"]
-        self._protocol = self._check_allowed_values_str_and_list(allowed_prot, value)
+        self._flow_protocol = self._check_allowed_values(allowed_prot, value)
 
     @property
     def port(self):
-        return self._port
+        return self._flow_port
 
     @port.setter
     def port(self, value):
-        self._port = value
+        self._flow_port =  self._check_allowed_values_regexp(self.port_range_pattern, value)
 
     @property
     def filter_action(self):
-        return self._filter_action
+        return self._flow_filter_action
 
     @filter_action.setter
     def filter_action(self, value):
         self._check_valid_action(value)
-        self._filter_action = value
+        self._flow_filter_action = value
 
     @property
     def destination_port(self):
-        return self._destination_port
+        return self._flow_destination_port
 
     @destination_port.setter
     def destination_port(self, value):
-        self._destination_port = value
+        self._flow_destination_port =  self._check_allowed_values_regexp(self.port_range_pattern, value)
 
     @property
     def source_port(self):
-        return self._source_port
+        return self._flow_source_port
 
     @source_port.setter
     def source_port(self, value):
-        self._source_port = value
+        self._flow_source_port = self._check_allowed_values_regexp(self.port_range_pattern, value)
 
     @property
     def icmp_type(self):
-        return self._icmp_type
+        return self._flow_icmp_type
 
     @icmp_type.setter
     def icmp_type(self, value):
-        self._icmp_type = self._check_allowed_values_str_and_list(
+        self._flow_icmp_type = self._check_allowed_values(
             ["echo-reply", "echo-request", "info-reply", "info-request", "mask-reply",
              "mask-request", "parameter-problem", "redirect", "router-advertisement",
              "router-solicit", "source-quench", "time-exceeded", "timestamp", "timestamp-reply",
@@ -118,34 +118,34 @@ class FlowRoute(object):
 
     @property
     def icmp_code(self):
-        return self._icmp_code
+        return self._flow_icmp_code
 
     @icmp_code.setter
     def icmp_code(self, value):
-        self._icmp_code = self._check_allowed_values_str_and_list(
+        self._flow_icmp_code = self._check_allowed_values(
             ["communication-prohibited-by-filtering", "destination-host-prohibited ", "destination-host-unknown ",
              "destination-network-unknown ", "fragmentation-needed ", "host-precedence-violation",
-             "ip-header-bad", "network-unreachable","network-unreachable-for-tos ",
+             "ip-header-bad", "network-unreachable", "network-unreachable-for-tos ",
              "port-unreachable", "redirect-for-host","redirect-for-network",
              "redirect-for-tos-and-host", "redirect-for-tos-and-net", "required-option-missing",
              "source-host-isolated", "source-route-failed", "ttl-eq-zero-during-reassembly",
              "ttl-eq-zero-during-transit"],
             value
         )
+
     @property
     def tcp_flags(self):
-        return self._tcp_flags
+        return self._flow_tcp_flags
 
     @tcp_flags.setter
     def tcp_flags(self, value):
-        self._tcp_flags = self._check_allowed_values_str_and_list(
+        self._flow_tcp_flags = self._check_allowed_values(
             ["fin", "syn", "rst", "push", "ack", "urgent"],
             value
         )
 
     @property
     def packet_length(self):
-        raise NotImplementedError()
         pass
 
     @packet_length.setter
@@ -155,7 +155,6 @@ class FlowRoute(object):
 
     @property
     def dscp(self):
-        raise NotImplementedError()
         pass
 
     @dscp.setter
@@ -165,7 +164,6 @@ class FlowRoute(object):
 
     @property
     def fragment(self):
-        raise NotImplementedError()
         pass
 
     @fragment.setter
@@ -197,38 +195,82 @@ class FlowRoute(object):
         if not self._is_valid_ip_cidr(value):
             raise ValueError("Invalid IP/CIDR")
 
-    def _check_allowed_values_str_and_list(self, allowed_vals, input):
-        if type(input) is not list and input not in allowed_vals:
+    def _check_allowed_values(self, allowed_vals, input_val):
+        """
+        Checks whether a given input list validates against a given list of valid expressions.
+        This method accepts Lists and String and returns an EXABGP compatible String representation
+        :param allowed_vals:
+        :param input_val:
+        :return:
+        """
+        if type(input_val) is not list and input_val not in allowed_vals:
             raise ValueError("Invalid Value")
 
         # Check if supplied var is list and whether it is a subset of the allowed arguments
-        if type(input) is list and not (set(input) <= set(allowed_vals)) or bool(input) is False:
+        if type(input_val) is list and not (set(input_val) <= set(allowed_vals)) or bool(input_val) is False:
             raise ValueError("Invalid Value")
 
-        if isinstance(input, list):
+        return self._format_expression_list(input_val)
+
+    def _check_allowed_values_regexp(self, regex, input_val):
+        """
+        Checks whether a given input validates against a given Regexp.
+        This method accepts Lists and Strings and returns a EXABGP compatible String representation
+        :param regex:
+        :param input_val:
+        :return:
+        """
+        #if not isinstance(regex, re.__Regex):
+            #raise ValueError("regex must be of type __Regex")
+
+        if type(input_val) is not list and not regex.match(input_val):
+            raise ValueError("Invalid Value")
+
+        if type(input_val) is list:
+            for el in input_val:
+                if not regex.match(el):
+                    raise ValueError("Invalid Expression")
+
+        return self._format_expression_list(input_val)
+
+    def _format_expression_list(self, input_val):
+        """
+        Formats the Input according to EXABGP's requirements.
+        This method takes a string or a list.
+        Lists with one element are converted to a string.
+        :param input_val:
+        :return:
+        """
+        if isinstance(input_val, list):
             # If list only contains one value..
-            if len(input) == 1:
-                return input[0]
+            if len(input_val) == 1:
+                return input_val[0]
             output_buff = ["["]
-            for el in input:
+            for el in input_val:
                 output_buff.append(" ")
                 output_buff.append(el)
             output_buff.append(" ]")
             return str.join("", output_buff)
+        return input_val
 
-        return input
 
     def count_match_criteria(self):
-        match_crit = [self.protocol, self.destination_address, self.source_address, self.port, self.source_port, self.destination_port]
-        count_match_crit = 0
+        """
+        Returns the number of set match criteria
+        :return:
+        """
+        match_crit = [self.protocol, self.destination_address, self.source_address,
+                      self.port, self.source_port, self.destination_port, self.icmp_code, self.icmp_type]
 
+        count_match_crit = 0
         for crit in match_crit:
             if crit != "":
                 count_match_crit += 1
         return count_match_crit
 
     def is_filter_action_set(self):
-        return self.filter_action is not False
+        return bool(self.filter_action) is not False
+
 
     def build_route(self):
         if not self.is_filter_action_set():
@@ -251,6 +293,11 @@ class FlowRoute(object):
         if self.destination_address:
             flow_route.append("destination ")
             flow_route.append(self.destination_address)
+            flow_route.append("; ")
+
+        if self.port:
+            flow_route.append("port ")
+            flow_route.append(self.port)
             flow_route.append("; ")
 
         if self.source_port:

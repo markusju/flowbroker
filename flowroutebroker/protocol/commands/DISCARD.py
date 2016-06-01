@@ -32,7 +32,7 @@ class DISCARD (AbstractCommand):
         except ValueError:
             raise SemanticError()
 
-        # Security Checks
+        # Security Checks on Application Layer
         security.commands.check_flowroute(flowroute, client_ip)
 
         api.announce_flow_route(flowroute)

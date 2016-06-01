@@ -13,21 +13,25 @@ class Server (threading.Thread):
         self.workers = []
         self.interrupt = threading.Event()
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #Avoid Address already in use errors
+        # Avoid Address already in use errors
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        #Set socket timeout to 1 second
+        # Set socket timeout to 1 second
         self.socket.settimeout(1)
 
     def run(self):
+        """
+        Starts the Server process
+        :return:
+        """
         self.socket.bind(("0.0.0.0", 5653))
-        #Backlog = 0
+        # Backlog = 5
         self.socket.listen(5)
-        #Ensure clean shutdown
+        # Ensure clean shutdown
         while not self.interrupt.isSet():
                 try:
-                    #Accept socket with 1 second timeout
+                    # Accept socket with 1 second timeout
                     sock, addr = self.socket.accept()
-                    #Newly created sockets should not have a timeout by default
+                    # Newly created sockets should not have a timeout by default
                     sock.settimeout(None)
                     work = worker.Worker(sock, addr, self.api)
                     self.workers.append(work)
@@ -39,6 +43,10 @@ class Server (threading.Thread):
                         raise exc
 
     def stop_server(self):
+        """
+        Stops the server process
+        :return:
+        """
         self.interrupt.set()
         self.socket.close()
 
