@@ -20,13 +20,15 @@ class ParameterEvaluator:
         self.param_list = param_list
         self.params = {
             "Destination-Address": self.__destination_address,
-            "Port": self.__port,
-            "Source-Port": self.__source_port,
-            "Destination-Port": self.__destination_port,
             "Protocol": self.__protocol,
-            "TCP-Flags": self.__tcp_flags,
+            "Port": self.__port,
+            "Destination-Port": self.__destination_port,
+            "Source-Port": self.__source_port,
             "ICMP-Type": self.__icmp_type,
             "ICMP-Code": self.__icmp_code,
+            "TCP-Flags": self.__tcp_flags,
+            "Packet-Length": self.__packet_length,
+            "DSCP": self.__dscp,
             "Fragment": self.__fragment,
             "Unsupported": self.__unsuported
         }
@@ -48,29 +50,35 @@ class ParameterEvaluator:
     def __destination_address(self, value):
         self.flowroute.destination_address = self.read_parameter(value)
 
+    def __protocol(self, value):
+        self.flowroute.protocol = self.read_parameter(value)
+
     def __port(self, value):
         self.flowroute.port = self.read_parameter(value)
-
-    def __source_port(self, value):
-        self.flowroute.source_port = self.read_parameter(value)
 
     def __destination_port(self, value):
         self.flowroute.destination_port = self.read_parameter(value)
 
-    def __protocol(self, value):
-        self.flowroute.protocol = self.read_parameter(value)
-
-    def __tcp_flags(self, value):
-        pass
+    def __source_port(self, value):
+        self.flowroute.source_port = self.read_parameter(value)
 
     def __icmp_type(self, value):
-        pass
+        self.flowroute.icmp_type = self.read_parameter(value)
 
     def __icmp_code(self, value):
-        pass
+        self.flowroute.icmp_code = self.read_parameter(value)
+
+    def __tcp_flags(self, value):
+        self.flowroute.tcp_flags = self.read_parameter(value)
+
+    def __packet_length(self, value):
+        self.flowroute.packet_length = self.read_parameter(value)
+
+    def __dscp(self, value):
+        self.flowroute.dscp = self.read_parameter(value)
 
     def __fragment(self, value):
-        pass
+        self.flowroute.fragment= self.read_parameter(value)
 
     def __unsuported(self, value):
         pass
@@ -83,6 +91,6 @@ class ParameterEvaluator:
         :return:
         """
         if ";" in val:
-            return str.split(val, ",")
+            return str.split(val, ";")
         else:
             return val
