@@ -226,7 +226,6 @@ class FlowRoute(object):
 
         return self._format_expression_list(input_val)
 
-
     def _check_allowed_values_regexp(self, regex, input_val):
         """
         Checks whether a given input validates against a given Regexp.
@@ -276,7 +275,8 @@ class FlowRoute(object):
         """
         match_crit = [self.protocol, self.destination_address, self.source_address,
                       self.port, self.source_port, self.destination_port, self.icmp_code,
-                      self.icmp_type, self.tcp_flags, self.fragment, self.packet_length]
+                      self.icmp_type, self.tcp_flags, self.fragment, self.packet_length,
+                      self.dscp]
 
         count_match_crit = 0
         for crit in match_crit:
@@ -354,6 +354,11 @@ class FlowRoute(object):
         if self.packet_length:
             flow_route.append("packet-length ")
             flow_route.append(self.packet_length)
+            flow_route.append("; ")
+
+        if self.dscp:
+            flow_route.append("dscp ")
+            flow_route.append(self.dscp)
             flow_route.append("; ")
 
         flow_route.append("} ")

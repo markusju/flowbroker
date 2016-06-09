@@ -127,3 +127,8 @@ class FlowRouteTest(TestCase):
         self.flowroute.packet_length = 6554
         self.flowroute.filter_action = "discard"
         self.assertEquals(str(self.flowroute), "flow route  { match { packet-length 6554; } then { discard; } }")
+
+    def test_dscp(self):
+        self.flowroute.dscp = 13
+        self.flowroute.filter_action = "discard"
+        self.assertEquals(str(self.flowroute), "flow route  { match { dscp 13; } then { discard; } }")
