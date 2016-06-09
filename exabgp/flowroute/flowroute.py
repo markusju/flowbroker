@@ -1,7 +1,8 @@
 __author__ = 'markus'
 
 import re
-import inspect
+from expressions import PortExpression, NumberRange, PacketLengthExpression, DSCPExpression
+
 
 class FlowRoute(object):
     """
@@ -13,12 +14,6 @@ class FlowRoute(object):
             "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}"
             "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
             "(\/([0-9]|[1-2][0-9]|3[0-2]))$")
-
-        self.port_range_pattern = re.compile(
-            "(^>([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])"
-            "&<([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$)"
-            "|(^=([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$)"
-        )
 
         self._action_pattern = re.compile("^(discard|rate-limit [0-9]+)$")
 
@@ -78,7 +73,7 @@ class FlowRoute(object):
 
     @port.setter
     def port(self, value):
-        self._flow_port = self._check_allowed_values_regexp(self.port_range_pattern, value)
+        self._flow_port = self._check_allowed_values_numberrange(PortExpression(), value)
 
     @property
     def filter_action(self):
@@ -95,7 +90,7 @@ class FlowRoute(object):
 
     @destination_port.setter
     def destination_port(self, value):
-        self._flow_destination_port =  self._check_allowed_values_regexp(self.port_range_pattern, value)
+        self._flow_destination_port = self._check_allowed_values_numberrange(PortExpression(), value)
 
     @property
     def source_port(self):
@@ -103,7 +98,7 @@ class FlowRoute(object):
 
     @source_port.setter
     def source_port(self, value):
-        self._flow_source_port = self._check_allowed_values_regexp(self.port_range_pattern, value)
+        self._flow_source_port = self._check_allowed_values_numberrange(PortExpression(), value)
 
     @property
     def icmp_type(self):
@@ -153,8 +148,7 @@ class FlowRoute(object):
 
     @packet_length.setter
     def packet_length(self, value):
-        #TODO: Checks
-        self._flow_packet_length = value
+        self._flow_packet_length = self._check_allowed_values_numberrange(PacketLengthExpression(), value)
 
     @property
     def dscp(self):
@@ -163,7 +157,7 @@ class FlowRoute(object):
     @dscp.setter
     def dscp(self, value):
         # TODO: checks
-        self._flow_dscp = value
+        self._flow_dscp = self._check_allowed_values_numberrange(DSCPExpression(), value)
 
     @property
     def fragment(self):
@@ -218,6 +212,21 @@ class FlowRoute(object):
 
         return self._format_expression_list(input_val)
 
+    def _check_allowed_values_numberrange(self, number_range, input_val):
+
+        if not isinstance(number_range, NumberRange):
+            raise ValueError("number_range must be of type NumberRange")
+
+        if type(input_val) is not list:
+            number_range.analyze(input_val)
+
+        if type(input_val) is list:
+            for el in input_val:
+                number_range.analyze(el)
+
+        return self._format_expression_list(input_val)
+
+
     def _check_allowed_values_regexp(self, regex, input_val):
         """
         Checks whether a given input validates against a given Regexp.
@@ -257,7 +266,7 @@ class FlowRoute(object):
                 output_buff.append(el)
             output_buff.append(" ]")
             return str.join("", output_buff)
-        return input_val
+        return str(input_val)
 
 
     def count_match_criteria(self):
@@ -267,7 +276,7 @@ class FlowRoute(object):
         """
         match_crit = [self.protocol, self.destination_address, self.source_address,
                       self.port, self.source_port, self.destination_port, self.icmp_code,
-                      self.icmp_type, self.tcp_flags, self.fragment]
+                      self.icmp_type, self.tcp_flags, self.fragment, self.packet_length]
 
         count_match_crit = 0
         for crit in match_crit:
@@ -340,6 +349,11 @@ class FlowRoute(object):
         if self.fragment:
             flow_route.append("fragment ")
             flow_route.append(self.fragment)
+            flow_route.append("; ")
+
+        if self.packet_length:
+            flow_route.append("packet-length ")
+            flow_route.append(self.packet_length)
             flow_route.append("; ")
 
         flow_route.append("} ")

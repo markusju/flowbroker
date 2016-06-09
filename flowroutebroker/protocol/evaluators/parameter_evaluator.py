@@ -24,6 +24,10 @@ class ParameterEvaluator:
             "Source-Port": self.__source_port,
             "Destination-Port": self.__destination_port,
             "Protocol": self.__protocol,
+            "TCP-Flags": self.__tcp_flags,
+            "ICMP-Type": self.__icmp_type,
+            "ICMP-Code": self.__icmp_code,
+            "Fragment": self.__fragment,
             "Unsupported": self.__unsuported
         }
 
@@ -42,21 +46,43 @@ class ParameterEvaluator:
             self.params[paramkey](paramvalue)
 
     def __destination_address(self, value):
-        self.flowroute.destination_address = value
+        self.flowroute.destination_address = self.read_parameter(value)
 
     def __port(self, value):
-        self.flowroute.port = value
+        self.flowroute.port = self.read_parameter(value)
 
     def __source_port(self, value):
-        self.flowroute.source_port = value
+        self.flowroute.source_port = self.read_parameter(value)
 
     def __destination_port(self, value):
-        self.flowroute.destination_port = value
+        self.flowroute.destination_port = self.read_parameter(value)
 
     def __protocol(self, value):
-        self.flowroute.protocol = value
+        self.flowroute.protocol = self.read_parameter(value)
+
+    def __tcp_flags(self, value):
+        pass
+
+    def __icmp_type(self, value):
+        pass
+
+    def __icmp_code(self, value):
+        pass
+
+    def __fragment(self, value):
+        pass
 
     def __unsuported(self, value):
         pass
 
-
+    def read_parameter(self, val):
+        """
+        Reads the value of Paramters in a request.
+        Returns a String for non-seperated values and lists for seperated values
+        :param val:
+        :return:
+        """
+        if ";" in val:
+            return str.split(val, ",")
+        else:
+            return val

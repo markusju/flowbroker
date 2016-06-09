@@ -34,6 +34,7 @@ class ServerProtocol (object):
             request = requestanalyzer.RequestAnalyzer(self)
 
             # Security Checks (Session Layer)
+            # TODO:
             # self.sechandler.check_request(request)
 
             # Semantic Analsysis ot the request
@@ -41,9 +42,6 @@ class ServerProtocol (object):
 
             # Attempting to execute the command
             server_reply = cmdeval.get_command().execute(self.api)
-
-            # Apply Signatures
-            self.sechandler.apply_to_reply(server_reply)
 
             # Transmitting the Reply
             self.put_reply(server_reply)
@@ -102,7 +100,7 @@ class ServerProtocol (object):
             raise ValueError("Only Strings are supported for put_line")
         self.sock.sendall(line+"\n")
 
-    def put_reply(self, reply):
+    def put_reply(self, reply, signed=True):
         """
         Sends a reply to the client
         :param reply:
@@ -110,6 +108,9 @@ class ServerProtocol (object):
         """
         if not isinstance(reply, replies.AbstractReply):
             raise ValueError("Only AbstractReplies are supported for put_reply")
+        # Apply Signatures
+        if signed:
+            self.sechandler.apply_to_reply(reply)
         self.put_line(reply.to_str())
 
     @property

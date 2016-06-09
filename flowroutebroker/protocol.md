@@ -32,7 +32,7 @@
 DISCARD 10.10.100.12/32
 Port: 80
 Source-Port: 90
-Destination-Port: =80 =21
+Destination-Port: [=80, =21]
 Protocol: tcp
 
 

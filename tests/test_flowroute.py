@@ -61,13 +61,7 @@ class FlowRouteTest(TestCase):
             self.flowroute.destination_port = "=70000"
 
         with self.assertRaises(ValueError):
-            self.flowroute.destination_port = "4000"
-
-        with self.assertRaises(ValueError):
             self.flowroute.destination_port = "40&60"
-
-        with self.assertRaises(ValueError):
-            self.flowroute.destination_port = ">40&>213"
 
         with self.assertRaises(ValueError):
             self.flowroute.destination_port = ">40&<90000"
@@ -77,13 +71,7 @@ class FlowRouteTest(TestCase):
             self.flowroute.source_port = "=70000"
 
         with self.assertRaises(ValueError):
-            self.flowroute.source_port = "4000"
-
-        with self.assertRaises(ValueError):
             self.flowroute.source_port = "40&60"
-
-        with self.assertRaises(ValueError):
-            self.flowroute.source_port = ">40&>213"
 
         with self.assertRaises(ValueError):
             self.flowroute.source_port = ">40&<90000"
@@ -93,13 +81,7 @@ class FlowRouteTest(TestCase):
             self.flowroute.port = "=70000"
 
         with self.assertRaises(ValueError):
-            self.flowroute.port = "4000"
-
-        with self.assertRaises(ValueError):
             self.flowroute.port = "40&60"
-
-        with self.assertRaises(ValueError):
-            self.flowroute.port = ">40&>213"
 
         with self.assertRaises(ValueError):
             self.flowroute.port = ">40&<90000"
@@ -141,3 +123,7 @@ class FlowRouteTest(TestCase):
         self.flowroute.filter_action = "discard"
         self.assertEquals(str(self.flowroute), "flow route  { match { fragment not-a-fragment; } then { discard; } }")
 
+    def test_packet_length(self):
+        self.flowroute.packet_length = 6554
+        self.flowroute.filter_action = "discard"
+        self.assertEquals(str(self.flowroute), "flow route  { match { packet-length 6554; } then { discard; } }")
