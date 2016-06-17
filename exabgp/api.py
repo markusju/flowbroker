@@ -14,6 +14,10 @@ class Api(threading.Thread):
         self.flowroutestore = flowroute.FlowRouteStore()
 
     def run(self):
+        """
+        Thread method. Checks flowroute Store for expired routes
+        :return:
+        """
         while True:
             expired_flowroutes = self.flowroutestore.get_expired_flowroutes()
 
@@ -23,10 +27,20 @@ class Api(threading.Thread):
             time.sleep(1)
 
     def announce_flow_route(self, flowroute):
+        """
+        Announces a flow route
+        :param flowroute:
+        :return:
+        """
         self.flowroutestore.add_flowroute(flowroute)
         self.api.announce_flow_route(flowroute)
 
     def withdraw_flow_route(self, flowroute):
+        """
+        Withdraws a flowroute
+        :param flowroute:
+        :return:
+        """
         self.flowroutestore.remove_flowroute(flowroute)
         self.api.withdraw_flow_route(flowroute)
 
