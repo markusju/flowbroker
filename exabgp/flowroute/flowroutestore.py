@@ -2,6 +2,7 @@ __author__ = 'markus'
 
 import time
 
+
 class FlowRouteStore:
     def __init__(self):
         self.store = []
@@ -19,4 +20,4 @@ class FlowRouteStore:
         self.store.remove(flowroute)
 
     def get_expired_flowroutes(self):
-        return [elem for elem in self.store if elem.expires <= self.__get_timestamp() and elem.expires > 0]
+        return [elem for elem in self.store if self.__get_timestamp() >= elem.expires > 0]

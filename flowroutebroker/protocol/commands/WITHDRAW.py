@@ -5,6 +5,7 @@ from abstractcommand import AbstractCommand
 from flowroutebroker.protocol import replies
 from flowroutebroker.protocol.exceptions import EvaluationError
 from flowroutebroker.protocol.exceptions import SemanticError
+from flowroutebroker.protocol.exceptions import NotFoundError
 import security.commands
 
 from flowroutebroker.protocol import evaluators
@@ -38,7 +39,10 @@ class WITHDRAW (AbstractCommand):
         # Security Checks on Application Layer
         security.commands.check_flowroute(flowroute, client_ip)
 
-        api.withdraw_flow_route(flowroute)
+        try:
+            api.withdraw_flow_route(flowroute)
+        except ValueError:
+            raise NotFoundError()
 
         return replies.Reply200()
 

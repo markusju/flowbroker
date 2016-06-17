@@ -388,3 +388,17 @@ class FlowRoute(object):
 
     def __get_timestamp(self):
         return int(time.time())
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__) and self.__dict__ == other.__dict__:
+            return True
+        else:
+            other = other.__dict__
+            me = self.__dict__
+            #Expire Eigenschaft ueberschreiben...
+            other["_expires"] = 0
+            me["_expires"] = 0
+            return other == me
+
+    def __ne__(self, other):
+        return not self.__eq__(other)

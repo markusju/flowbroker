@@ -10,6 +10,7 @@ from exceptions import EvaluationError
 from exceptions import SemanticError
 from exceptions import PermError
 from exceptions import AuthError
+from exceptions import NotFoundError
 
 
 class ServerProtocol (object):
@@ -51,6 +52,9 @@ class ServerProtocol (object):
                 self.put_reply(replies.Reply408())
             else:
                 self.put_reply(replies.Reply500())
+
+        except NotFoundError:
+            self.put_reply(replies.Reply404())
 
         except PermError:
             self.put_reply(replies.Reply403())
