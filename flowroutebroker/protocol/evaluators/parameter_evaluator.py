@@ -30,7 +30,8 @@ class ParameterEvaluator:
             "Packet-Length": self.__packet_length,
             "DSCP": self.__dscp,
             "Fragment": self.__fragment,
-            "Unsupported": self.__unsuported
+            "Unsupported": self.__unsuported,
+            "Expires": self.__expires
         }
 
         self.__process()
@@ -78,7 +79,10 @@ class ParameterEvaluator:
         self.flowroute.dscp = self.read_parameter(value)
 
     def __fragment(self, value):
-        self.flowroute.fragment= self.read_parameter(value)
+        self.flowroute.fragment = self.read_parameter(value)
+
+    def __expires(self, value):
+        self.flowroute.expires = self.read_parameter(value)
 
     def __unsuported(self, value):
         pass

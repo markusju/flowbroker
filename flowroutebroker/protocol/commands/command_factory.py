@@ -4,6 +4,7 @@ from DISCARD import DISCARD
 from RATELIMIT import RATELIMIT
 from UNSUPPORTED import UNSUPPORTED
 from VERSION import VERSION
+from WITHDRAW import WITHDRAW
 from abstractcommand import AbstractCommand
 
 from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
@@ -24,6 +25,7 @@ class CommandFactory:
             "DISCARD": lambda x: DISCARD(x),
             "RATELIMIT": lambda x: RATELIMIT(x),
             "VERSION": lambda x: VERSION(x),
+            "WITHDRAW": lambda x: WITHDRAW(x),
             "UNSUPPORTED": lambda x: UNSUPPORTED(x)
         }
 

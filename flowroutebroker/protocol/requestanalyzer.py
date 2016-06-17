@@ -94,7 +94,8 @@ class RequestAnalyzer (object):
         self._request_method_args = method_parts
 
         for params in current_stack:
-            parts = params.split(":")
+            #Split on first occurence
+            parts = params.split(":", 1)
 
             # Parameters sind fehlerhaft
             if len(parts) != 2:

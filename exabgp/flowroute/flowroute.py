@@ -2,7 +2,7 @@ __author__ = 'markus'
 
 import re
 from expressions import PortExpression, NumberRange, PacketLengthExpression, DSCPExpression
-
+import time
 
 class FlowRoute(object):
     """
@@ -16,6 +16,8 @@ class FlowRoute(object):
             "(\/([0-9]|[1-2][0-9]|3[0-2]))$")
 
         self._action_pattern = re.compile("^(discard|rate-limit [0-9]+)$")
+
+        self._expires = -1
 
         self._flow_name = ""
         self._flow_source_address = ""
@@ -31,6 +33,14 @@ class FlowRoute(object):
         self._flow_fragment = ""
         self._flow_dscp = ""
         self._flow_filter_action = ""
+
+    @property
+    def expires(self):
+        return self._expires
+
+    @expires.setter
+    def expires(self, value):
+        self._expires = self.__get_timestamp()+int(value)
 
     @property
     def name(self):
@@ -374,3 +384,7 @@ class FlowRoute(object):
 
     def __str__(self):
         return self.build_route()
+
+
+    def __get_timestamp(self):
+        return int(time.time())
