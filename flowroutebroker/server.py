@@ -4,6 +4,8 @@ import socket
 import worker
 import threading
 
+from flowroutebroker.config import Config
+
 
 class Server (threading.Thread):
 
@@ -17,6 +19,7 @@ class Server (threading.Thread):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # Set socket timeout to 1 second
         self.socket.settimeout(1)
+        self.config = Config()
 
     def run(self):
         """
@@ -33,7 +36,7 @@ class Server (threading.Thread):
                     sock, addr = self.socket.accept()
                     # Newly created sockets should not have a timeout by default
                     sock.settimeout(None)
-                    work = worker.Worker(sock, addr, self.api)
+                    work = worker.Worker(sock, addr, self.api, self.config)
                     self.workers.append(work)
                     work.start()
                 except socket.error as exc:

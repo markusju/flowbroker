@@ -6,7 +6,7 @@ from flowroutebroker.protocol.exceptions import EvaluationError
 
 
 class RATELIMIT (AbstractCommand):
-    def execute(self, api):
+    def execute(self, api, config):
 
         # RATELIMIT requires at least one Request Method Argument
         if len(self.requestanalyzer.request_method_args) != 2:

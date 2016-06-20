@@ -24,7 +24,7 @@ class MacHandler:
         """
         if not isinstance(reply, AbstractReply):
             raise ValueError("reply must be of type AbstractReply")
-        reply.add_parameter("Date", str(datetime.datetime.utcnow()))
+        reply.add_parameter("Date", str(datetime.datetime.utcnow().isoformat()))
         signature = self.mac.get_mac_for_message(reply.to_str(True))
         reply.add_parameter("Signature", signature)
 
@@ -41,9 +41,8 @@ class MacHandler:
             date = request.parameters["Date"]
             signature = request.parameters["Signature"]
 
-            # TODO: Check Date
+            self.mac.check_mac_for_message(signature, request.to_string_for_signature_validation())
 
-            # TODO: Check Signature
 
         except KeyError:
             raise AuthError()

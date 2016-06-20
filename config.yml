@@ -1,0 +1,19 @@
+broker:
+    bind-address: 0.0.0.0
+    port: 5653
+
+hosts:
+    default:
+        secret: asdasdasdasdasdasdasd
+
+    127.0.0.1:
+        subnets:
+          - 127.0.0.1/32
+          - 8.8.8.8/32
+        secret: assa54gf54fgh564sd54fsdf
+
+    8.8.8.8:
+        subnets:
+          - 127.0.0.1/32
+          - 8.8.8.8/32
+        secret: assa54gf54fgh564sd54fsdf

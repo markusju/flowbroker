@@ -11,7 +11,7 @@ import exabgp
 
 
 class DISCARD (AbstractCommand):
-    def execute(self, api):
+    def execute(self, api, config):
 
         # DISCARD requires at least one Request Method Argument
         if len(self.requestanalyzer.request_method_args) != 1:
@@ -32,8 +32,8 @@ class DISCARD (AbstractCommand):
         except ValueError:
             raise SemanticError()
 
-        # Security Checks on Application Layer
-        security.commands.check_flowroute(flowroute, client_ip)
+        # Security Checks
+        security.commands.check_flowroute(flowroute, client_ip, config)
 
         api.announce_flow_route(flowroute)
 

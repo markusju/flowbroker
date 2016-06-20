@@ -6,7 +6,7 @@ from flowroutebroker.protocol import replies
 
 
 class UNSUPPORTED(AbstractCommand):
-    def execute(self, api):
+    def execute(self, api, config):
         return replies.Reply501()
 
     def get_method(self):

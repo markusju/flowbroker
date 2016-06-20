@@ -10,7 +10,7 @@ from exabgp import FlowRoute
 
 class Worker (threading.Thread):
 
-    def __init__(self, sock, addr, api):
+    def __init__(self, sock, addr, api, config):
         threading.Thread.__init__(self)
         self.setDaemon(True)
         self.sock = sock # type: socket.socket
@@ -18,6 +18,7 @@ class Worker (threading.Thread):
         self.sockfile = self.sock.makefile()
         self.addr = addr
         self.api = api
+        self.config = config
 
     def run(self):
         """
@@ -25,7 +26,7 @@ class Worker (threading.Thread):
         :return:
         """
         try:
-            protocol.ServerProtocol(self.sock, self.sockfile, self.addr, self.api).run()
+            protocol.ServerProtocol(self.sock, self.sockfile, self.addr, self.api, self.config).run()
         finally:
             self.sockfile.close()
             self.sock.close()

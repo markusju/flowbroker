@@ -17,5 +17,5 @@ class AbstractCommand:
         pass
 
     @abstractmethod
-    def execute(self, api):
+    def execute(self, api, config):
         pass

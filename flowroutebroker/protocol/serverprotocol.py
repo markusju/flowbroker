@@ -17,13 +17,14 @@ class ServerProtocol (object):
     """
     Flow Route Broker Protocol Implementation
     """
-    def __init__(self, sock, sockfile, addr, api):
+    def __init__(self, sock, sockfile, addr, api, config):
         self.sock = sock  # type: socket.socket
         self.sockfile = sockfile  # type: socket._fileobject
         self.api = api
         self._addr = addr
+        self.config = config
         self.currentLine = None
-        self.sechandler = security.MacHandler("secret")
+        self.sechandler = security.MacHandler(self.config.get_secret_for_host(self._addr[0]))
 
     def run(self):
         """
@@ -36,13 +37,13 @@ class ServerProtocol (object):
 
             # Security Checks (Session Layer)
             # TODO:
-            # self.sechandler.check_request(request)
+            self.sechandler.check_request(request)
 
             # Semantic Analsysis ot the request
             cmdeval = commands.CommandFactory(request)
 
             # Attempting to execute the command
-            server_reply = cmdeval.get_command().execute(self.api)
+            server_reply = cmdeval.get_command().execute(self.api, self.config)
 
             # Transmitting the Reply
             self.put_reply(server_reply)

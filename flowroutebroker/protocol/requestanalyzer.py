@@ -57,7 +57,6 @@ class RequestAnalyzer (object):
                 if len(self.request_stack) > 1 and self.request_stack[-1] == "\n":
                     break
 
-
             # Solange lesen bis nichts mehr verfuegbar ist
             except IOError as exc:
                 raise exc
@@ -109,4 +108,21 @@ class RequestAnalyzer (object):
 
             self.parameters[key] = value
 
+    def to_string_for_signature_validation(self):
+        out = []
+        out.append(self.request_method)
+        for el in self.request_method_args:
+            out.append(" ")
+            out.append(el)
 
+        for key, value in self.parameters.iteritems():
+            if key == "Signature": continue
+
+            out.append("\n")
+            out.append(key)
+            out.append(": ")
+            out.append(value)
+
+        out.append("\n\n")
+
+        return str.join("", out)
