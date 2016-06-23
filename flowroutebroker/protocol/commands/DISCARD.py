@@ -4,7 +4,7 @@ from abstractcommand import AbstractCommand
 from flowroutebroker.protocol import replies
 from flowroutebroker.protocol.exceptions import EvaluationError
 from flowroutebroker.protocol.exceptions import SemanticError
-import security.commands
+import flowroutebroker.security.commands
 
 from flowroutebroker.protocol import evaluators
 import exabgp
@@ -33,7 +33,7 @@ class DISCARD (AbstractCommand):
             raise SemanticError()
 
         # Security Checks
-        security.commands.check_flowroute(flowroute, client_ip, config)
+        flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
 
         api.announce_flow_route(flowroute)
 

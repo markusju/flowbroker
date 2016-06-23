@@ -6,7 +6,7 @@ from flowroutebroker.protocol import replies
 from flowroutebroker.protocol.exceptions import EvaluationError
 from flowroutebroker.protocol.exceptions import SemanticError
 from flowroutebroker.protocol.exceptions import NotFoundError
-import security.commands
+import flowroutebroker.security.commands
 
 from flowroutebroker.protocol import evaluators
 import exabgp
@@ -37,7 +37,7 @@ class WITHDRAW (AbstractCommand):
             raise SemanticError()
 
         # Security Checks on Application Layer
-        security.commands.check_flowroute(flowroute, client_ip, config)
+        flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
 
         try:
             api.withdraw_flow_route(flowroute)

@@ -1,11 +1,11 @@
 __author__ = 'markus'
 
-
 import socket
+
 import replies
 import requestanalyzer
 import commands
-import security
+from flowroutebroker import security
 from exceptions import EvaluationError
 from exceptions import SemanticError
 from exceptions import PermError
