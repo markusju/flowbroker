@@ -6,6 +6,10 @@ from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
 import datetime
 from flowroutebroker.protocol.exceptions import AuthError
 
+import pytz
+
+import dateutil.parser
+
 
 class MacHandler:
 
@@ -24,7 +28,7 @@ class MacHandler:
         """
         if not isinstance(reply, AbstractReply):
             raise ValueError("reply must be of type AbstractReply")
-        reply.add_parameter("Date", str(datetime.datetime.utcnow().isoformat()))
+        reply.add_parameter("Date", str(datetime.datetime.utcnow().isoformat())+"Z")
         signature = self.mac.get_mac_for_message(reply.to_str(True))
         reply.add_parameter("Signature", signature)
 
@@ -40,6 +44,17 @@ class MacHandler:
         try:
             date = request.parameters["Date"]
             signature = request.parameters["Signature"]
+
+
+            now = datetime.datetime.utcnow()
+            now = now.replace(tzinfo=pytz.utc)
+
+            yourdate = dateutil.parser.parse(date)
+
+            diff = now-yourdate
+
+            if diff.total_seconds() > 0.5 or diff.total_seconds() < 0:
+                raise AuthError()
 
             self.mac.check_mac_for_message(signature, request.to_string_for_signature_validation())
 

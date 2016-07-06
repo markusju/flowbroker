@@ -1,6 +1,7 @@
 __author__ = 'markus'
 
 from exceptions import EvaluationError
+from collections import OrderedDict
 
 class RequestAnalyzer (object):
 
@@ -16,7 +17,7 @@ class RequestAnalyzer (object):
         self._request_method = ""
         self._request_method_args = []
 
-        self._parameters = {}
+        self._parameters = OrderedDict()
 
         self.__analyze_request()
         self.__cleanup_request_stack()
