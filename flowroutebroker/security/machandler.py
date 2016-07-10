@@ -53,12 +53,15 @@ class MacHandler:
 
             diff = now-yourdate
 
-            if diff.total_seconds() > 0.5 or diff.total_seconds() < 0:
+            if diff.total_seconds() > 0.5 or diff.total_seconds() < -0.5:
                 raise AuthError()
 
             self.mac.check_mac_for_message(signature, request.to_string_for_signature_validation())
 
 
         except KeyError:
+            raise AuthError()
+
+        except ValueError:
             raise AuthError()
 
