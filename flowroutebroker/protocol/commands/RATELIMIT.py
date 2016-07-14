@@ -6,10 +6,12 @@ __author__ = 'markus'
 from abstractcommand import AbstractCommand
 from flowroutebroker.protocol import replies
 from flowroutebroker.protocol.exceptions import EvaluationError, SemanticError
+import flowroutebroker.security.commands
+from flowroutebroker.protocol import evaluators
 
 
 class RATELIMIT (AbstractCommand):
-    def execute(self, api, config, evaluators=None):
+    def execute(self, api, config):
 
         # RATELIMIT requires at least one Request Method Argument
         if len(self.requestanalyzer.request_method_args) != 2:
