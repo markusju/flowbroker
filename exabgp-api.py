@@ -6,19 +6,31 @@ import exabgp
 import flowroutebroker
 
 
-api = exabgp.getApi()
 
-server = flowroutebroker.Server(api)
-server.start()
+try:
+
+    api = exabgp.getApi()
+
+    server = flowroutebroker.Server(api)
+    server.start()
 
 
-while True:
-    try:
-        time.sleep(1)
-    except KeyboardInterrupt:
-        server.stop_server()
-        break
-exit()
+    while True:
+        try:
+            time.sleep(1)
+        except KeyboardInterrupt:
+            server.stop_server()
+            break
+
+except Exception as e:
+    print "An error occured, exiting."
+    print e.message
+
+else:
+    print "An error occured, exiting."
+
+finally:
+    exit()
 
 
 

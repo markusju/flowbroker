@@ -5,8 +5,24 @@ import yaml
 class Config:
     def __init__(self, filename="config.yml"):
 
-        with open(filename, 'r') as ymlfile:
-            self.cfg = yaml.safe_load(ymlfile)
+        # Paths to look for the file
+        paths = ["/etc/broker-server/", "/etc/exabgp/broker-server/", ""]
+
+        ymlfile = None
+        count = 0
+
+        for path in paths:
+            try:
+                ymlfile = open(path+filename, 'r')
+                break
+            except IOError as err:
+                count += 1
+                if count >= len(paths):
+                    raise Exception("Cound not find a valid config file!")
+                continue
+
+        self.cfg = yaml.safe_load(ymlfile)
+
         """
             {
               "hosts": {
