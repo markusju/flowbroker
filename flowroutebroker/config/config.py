@@ -6,7 +6,7 @@ class Config:
     def __init__(self, filename="config.yml"):
 
         # Paths to look for the file
-        paths = ["/etc/broker-server/", "/etc/exabgp/broker-server/", ""]
+        paths = ["", "/etc/broker-server/", "/etc/exabgp/broker-server/"]
 
         ymlfile = None
         count = 0
@@ -22,6 +22,7 @@ class Config:
                 continue
 
         self.cfg = yaml.safe_load(ymlfile)
+        self._pre_checks()
 
         """
             {
@@ -50,6 +51,14 @@ class Config:
               }
             }
        """
+
+    def _pre_checks(self):
+        #TODO
+        pass
+
+    def get_tolerance(self):
+        return long(self.cfg["broker"]["tolerance"])
+
     def get_secret_for_host(self, ip):
         if ip in self.cfg["hosts"]:
             return self.cfg["hosts"][ip]["secret"]

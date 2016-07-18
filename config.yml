@@ -1,6 +1,8 @@
 broker:
     bind-address: 0.0.0.0
     port: 5653
+    # Tolerance in milliseconds for Replay attack protection
+    tolerance: 10000
 
 hosts:
     default:
@@ -11,6 +13,9 @@ hosts:
           - 127.0.0.1/32
           - 8.8.8.8/32
         secret: assa54gf54fgh564sd54fsdf
+
+    10.0.2.15:
+        secret: testClient
 
     8.8.8.8:
         subnets:

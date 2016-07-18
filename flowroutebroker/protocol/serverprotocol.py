@@ -24,7 +24,7 @@ class ServerProtocol (object):
         self._addr = addr
         self.config = config
         self.currentLine = None
-        self.sechandler = security.MacHandler(self.config.get_secret_for_host(self._addr[0]))
+        self.sechandler = security.MacHandler(self.config.get_secret_for_host(self._addr[0]), self.config)
 
     def run(self):
         """

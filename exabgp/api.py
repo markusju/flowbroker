@@ -11,6 +11,7 @@ class Api(threading.Thread):
         threading.Thread.__init__(self)
         self.setDaemon(True)
         self.api = api
+        self.lock = threading.Lock()
         self.flowroutestore = flowroute.FlowRouteStore()
 
     def run(self):
@@ -20,6 +21,7 @@ class Api(threading.Thread):
         """
         while True:
             expired_flowroutes = self.flowroutestore.get_expired_flowroutes()
+
 
             for el in expired_flowroutes:
                 self.withdraw_flow_route(el)
@@ -41,6 +43,5 @@ class Api(threading.Thread):
         :param flowroute:
         :return:
         """
-        self.flowroutestore.remove_flowroute(flowroute)
-        self.api.withdraw_flow_route(flowroute)
-
+        flow = self.flowroutestore.remove_flowroute(flowroute)
+        self.api.withdraw_flow_route(flow)

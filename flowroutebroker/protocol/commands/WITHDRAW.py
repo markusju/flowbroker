@@ -28,6 +28,7 @@ class WITHDRAW (AbstractCommand):
 
         # Does not matter, but flowroute requires it to be set
         flowroute.filter_action = "discard"
+
         try:
             flowroute.source_address = source
             # We're defaulting to the client's ip fo the destination address...

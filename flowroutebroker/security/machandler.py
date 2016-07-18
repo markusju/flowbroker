@@ -13,7 +13,7 @@ import dateutil.parser
 
 class MacHandler:
 
-    def __init__(self, secret):
+    def __init__(self, secret, config):
         """
         Returns an object, which can be integrated into the protocol processing chain.
         Adds Signatures to Requests and verifies Signatures in Requests
@@ -21,6 +21,7 @@ class MacHandler:
         :return:
         """
         self.mac = MessageAuthenticationCode(secret)
+        self.config = config
 
     def apply_to_reply(self, reply):
         """
@@ -53,7 +54,8 @@ class MacHandler:
 
             diff = now-yourdate
 
-            if diff.total_seconds() > 0.5 or diff.total_seconds() < -0.5:
+
+            if diff.total_seconds() > (self.config.get_tolerance() / 1000.0) or diff.total_seconds() < -(self.config.get_tolerance() / 1000.0):
                 raise AuthError()
 
             self.mac.check_mac_for_message(signature, request.to_string_for_signature_validation())

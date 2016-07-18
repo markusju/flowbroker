@@ -385,20 +385,49 @@ class FlowRoute(object):
     def __str__(self):
         return self.build_route()
 
-
     def __get_timestamp(self):
         return int(time.time())
+
+    def equals_match_crit(self, other):
+        if self.__eq__(other):
+            return True
+        other_a = other.__dict__
+        me = self.__dict__
+
+
+        orig_other = other_a["_flow_filter_action"]
+        orig_me = me["_flow_filter_action"]
+
+        other_a["_flow_filter_action"] = ""
+        me["_flow_filter_action"] = ""
+
+        val = self.__eq__(other)
+
+        other_a["_flow_filter_action"] = orig_other
+        me["_flow_filter_action"] = orig_me
+
+        return val
 
     def __eq__(self, other):
         if isinstance(other, self.__class__) and self.__dict__ == other.__dict__:
             return True
         else:
-            other = other.__dict__
+            other_a = other.__dict__
             me = self.__dict__
+
             #Expire Eigenschaft ueberschreiben...
-            other["_expires"] = 0
+            orig_other = other_a["_expires"]
+            orig_me = me["_expires"]
+
+            other_a["_expires"] = 0
             me["_expires"] = 0
-            return other == me
+
+            val = other_a == me
+
+            other_a["_expires"] = orig_other
+            me["_expires"] = orig_me
+
+            return val
 
     def __ne__(self, other):
         return not self.__eq__(other)
