@@ -26,7 +26,7 @@ class Server (threading.Thread):
         Starts the Server process
         :return:
         """
-        self.socket.bind(("0.0.0.0", 5653))
+        self.socket.bind((self.config.get_bind_address(), self.config.get_listen_port()))
         # Backlog = 5
         self.socket.listen(5)
         # Ensure clean shutdown

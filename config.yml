@@ -1,4 +1,5 @@
 broker:
+    # Address the server binds
     bind-address: 0.0.0.0
     port: 5653
     # Tolerance in milliseconds for Replay attack protection

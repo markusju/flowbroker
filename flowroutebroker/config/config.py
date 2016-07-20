@@ -81,6 +81,12 @@ class Config:
     def get_tolerance(self):
         return long(self.cfg["broker"]["tolerance"])
 
+    def get_bind_address(self):
+        return self.cfg["broker"]["bind-address"]
+
+    def get_listen_port(self):
+        return int(self.cfg["broker"]["port"])
+
     def get_secret_for_host(self, ip):
         if ip in self.cfg["hosts"]:
             return self.cfg["hosts"][ip]["secret"]
