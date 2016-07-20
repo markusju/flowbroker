@@ -4,16 +4,18 @@ import re
 from expressions import PortExpression, NumberRange, PacketLengthExpression, DSCPExpression
 import time
 
+ip_cidr_pattern = re.compile(
+            "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}"
+            "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
+            "(\/([0-9]|[1-2][0-9]|3[0-2]))$")
+
 class FlowRoute(object):
     """
     Representation of EXABGP's flow route syntax
     """
 
     def __init__(self):
-        self._ip_pattern = re.compile(
-            "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}"
-            "([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])"
-            "(\/([0-9]|[1-2][0-9]|3[0-2]))$")
+        self._ip_pattern = ip_cidr_pattern
 
         self._action_pattern = re.compile("^(discard|rate-limit [0-9]+)$")
 

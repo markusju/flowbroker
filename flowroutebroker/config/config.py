@@ -1,6 +1,9 @@
 __author__ = 'markus'
 
 import yaml
+from exabgp.flowroute.flowroute import ip_cidr_pattern
+from configexception import ConfigError
+
 
 class Config:
     def __init__(self, filename="config.yml"):
@@ -23,38 +26,57 @@ class Config:
 
         self.cfg = yaml.safe_load(ymlfile)
         self._pre_checks()
-
-        """
-            {
-              "hosts": {
-                "default": {
-                  "secret": "asdasdasdasdasdasdasd"
-                },
-                "8.8.8.8": {
-                  "subnets": [
-                    "127.0.0.1/32",
-                    "8.8.8.8/32"
-                  ],
-                  "secret": "assa54gf54fgh564sd54fsdf"
-                },
-                "127.0.0.1": {
-                  "subnets": [
-                    "127.0.0.1/32",
-                    "8.8.8.8/32"
-                  ],
-                  "secret": "assa54gf54fgh564sd54fsdf"
-                }
-              },
-              "broker": {
-                "port": 5653,
-                "bind-address": "0.0.0.0"
-              }
-            }
-       """
+        self._semantic_checks()
 
     def _pre_checks(self):
-        #TODO
-        pass
+        """
+        Syntactical Analysis
+        :return:
+        """
+        if "broker" not in self.cfg :
+            raise ConfigError("You must define 'broker'")
+
+        if "bind-address" not in self.cfg["broker"]:
+            self.cfg["broker"]["bind-address"] = "0.0.0.0"
+
+        if "port" not in self.cfg["broker"]:
+            self.cfg["broker"]["port"] = 5653
+
+        if "tolerance" not in self.cfg["broker"]:
+            raise ConfigError("You must define 'tolerance' in the 'broker' context")
+
+        if "hosts" not in self.cfg:
+            raise ConfigError("You must define 'hosts'")
+
+        if "default" not in self.cfg["hosts"]:
+            raise ConfigError("You must define 'default' in the 'hosts' context")
+
+        if "secret" not in self.cfg["hosts"]["default"]:
+            raise ConfigError("You must define 'secret' in the 'default' context contained in the 'hosts' context")
+
+    def _semantic_checks(self):
+        """
+        Semantic Analysis
+        :return:
+        """
+
+        if not ip_cidr_pattern.match(self.cfg["broker"]["bind-address"]+"/32"):
+            raise ConfigError("Invalid Bind Address")
+
+        if self.cfg["broker"]["port"] not in range(0, 65535):
+            raise ConfigError("Invalid Listen Port")
+
+        for ip in self.cfg["hosts"]:
+            if ip == "default":
+                continue
+
+            if not ip_cidr_pattern.match(ip+"/32"):
+                raise ConfigError("You have defined an invalid IP address '" + ip + "' in the 'hosts' context")
+
+            if "subnets" in self.cfg["hosts"][ip]:
+                for subnetips in self.cfg["hosts"][ip]["subnets"]:
+                    if not ip_cidr_pattern.match(subnetips):
+                        raise ConfigError("You have defined an invalid IP address '"+ subnetips +"' in the 'subnets' context for the host '" + ip + "'")
 
     def get_tolerance(self):
         return long(self.cfg["broker"]["tolerance"])

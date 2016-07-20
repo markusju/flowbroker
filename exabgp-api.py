@@ -4,7 +4,7 @@ __author__ = 'markus'
 import time
 import exabgp
 import flowroutebroker
-
+from flowroutebroker.config import ConfigError
 
 
 try:
@@ -21,6 +21,11 @@ try:
         except KeyboardInterrupt:
             server.stop_server()
             break
+
+
+except ConfigError as e:
+    print "You have an error in your configuration file, exiting."
+    print e.message
 
 except Exception as e:
     print "An error occured, exiting."
