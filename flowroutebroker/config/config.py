@@ -33,6 +33,10 @@ class Config:
         Syntactical Analysis
         :return:
         """
+
+        if not self.cfg:
+            raise ConfigError("Your config file seems to be empty");
+
         if "broker" not in self.cfg :
             raise ConfigError("You must define 'broker'")
 
@@ -48,10 +52,10 @@ class Config:
         if "hosts" not in self.cfg:
             raise ConfigError("You must define 'hosts'")
 
-        if "default" not in self.cfg["hosts"]:
+        if not self.cfg["hosts"] or "default" not in self.cfg["hosts"]:
             raise ConfigError("You must define 'default' in the 'hosts' context")
 
-        if "secret" not in self.cfg["hosts"]["default"]:
+        if not self.cfg["hosts"]["default"] or "secret" not in self.cfg["hosts"]["default"]:
             raise ConfigError("You must define 'secret' in the 'default' context contained in the 'hosts' context")
 
     def _semantic_checks(self):
@@ -67,11 +71,12 @@ class Config:
             raise ConfigError("Invalid Listen Port")
 
         for ip in self.cfg["hosts"]:
-            if ip == "default":
-                continue
 
-            if not ip_cidr_pattern.match(ip+"/32"):
+            if not ip_cidr_pattern.match(ip+"/32") and ip != "default":
                 raise ConfigError("You have defined an invalid IP address '" + ip + "' in the 'hosts' context")
+
+            if not self.cfg["hosts"][ip]:
+                raise ConfigError("You haved defined the host '"+ ip +"' but did not provide any configuration parameters in its context. Tryn' to be funny, huh? Not cool, dude.")
 
             if "subnets" in self.cfg["hosts"][ip]:
                 for subnetips in self.cfg["hosts"][ip]["subnets"]:

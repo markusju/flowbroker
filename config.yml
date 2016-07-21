@@ -1,18 +1,23 @@
 broker:
-    # Address the server binds
+    # Address the server binds to
     bind-address: 0.0.0.0
+    # Port the server can be reached at
     port: 5653
-    # Tolerance in milliseconds for Replay attack protection
+    # Tolerance in milliseconds for replay attack protection
     tolerance: 10000
 
+# Settings for clients connecting to the server
 hosts:
     default:
         secret: asdasdasdasdasdasdasd
 
+    # IP-Address of the client
     127.0.0.1:
+        # Subnets the client is allowed to request FlowSpecs for
         subnets:
           - 127.0.0.1/32
           - 8.8.8.8/32
+        # Secret used for authentication
         secret: assa54gf54fgh564sd54fsdf
 
     10.0.2.15:
