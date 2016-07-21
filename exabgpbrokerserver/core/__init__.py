@@ -1,11 +1,11 @@
 #!/usr/bin/python
 __author__ = 'markus'
 
-import sys
 import time
-import exabgp
+
+from exabgpbrokerserver import exabgp
 import flowroutebroker
-from flowroutebroker.config import ConfigError
+from exabgpbrokerserver.flowroutebroker.config import ConfigError
 
 
 def main():

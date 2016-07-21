@@ -2,7 +2,7 @@ __author__ = 'markus'
 
 
 from abstractcommand import AbstractCommand
-from flowroutebroker.protocol import replies
+from exabgpbrokerserver.flowroutebroker.protocol import replies
 
 
 class UNSUPPORTED(AbstractCommand):

@@ -7,7 +7,7 @@ from VERSION import VERSION
 from WITHDRAW import WITHDRAW
 from abstractcommand import AbstractCommand
 
-from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
+from exabgpbrokerserver.flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
 
 
 class CommandFactory:

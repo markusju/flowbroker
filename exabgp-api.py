@@ -1,3 +1,3 @@
-import core
+from exabgpbrokerserver import core
 
 core.main()

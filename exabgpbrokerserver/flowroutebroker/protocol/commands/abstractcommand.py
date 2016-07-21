@@ -1,7 +1,8 @@
 __author__ = 'markus'
 
 from abc import ABCMeta, abstractmethod
-from flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
+
+from exabgpbrokerserver.flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
 
 
 class AbstractCommand:

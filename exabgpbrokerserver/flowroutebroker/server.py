@@ -1,10 +1,10 @@
 __author__ = 'markus'
 
 import socket
-import worker
 import threading
 
-from flowroutebroker.config import Config
+import worker
+from config import Config
 
 
 class Server (threading.Thread):

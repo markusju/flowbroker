@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from flowroutebroker import security
+from exabgpbrokerserver.flowroutebroker import security
 
 __author__ = 'markus'
 

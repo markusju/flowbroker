@@ -1,13 +1,13 @@
 __author__ = 'markus'
 
 from abstractcommand import AbstractCommand
-from flowroutebroker.protocol import replies
-from flowroutebroker.protocol.exceptions import EvaluationError
-from flowroutebroker.protocol.exceptions import SemanticError
-import flowroutebroker.security.commands
+from exabgpbrokerserver.flowroutebroker.protocol import replies
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import EvaluationError
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import SemanticError
+import exabgpbrokerserver.flowroutebroker.security.commands
 
-from flowroutebroker.protocol import evaluators
-import exabgp
+from exabgpbrokerserver.flowroutebroker.protocol import evaluators
+from exabgpbrokerserver import exabgp
 
 
 class DISCARD (AbstractCommand):
@@ -33,7 +33,7 @@ class DISCARD (AbstractCommand):
             raise SemanticError()
 
         # Security Checks
-        flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
+        exabgpbrokerserver.flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
 
         api.announce_flow_route(flowroute)
 

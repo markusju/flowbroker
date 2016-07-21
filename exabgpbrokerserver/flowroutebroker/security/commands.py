@@ -1,8 +1,7 @@
 __author__ = 'markus'
 
-
-import exabgp
-from flowroutebroker.protocol.exceptions import PermError
+from exabgpbrokerserver import exabgp
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import PermError
 
 
 def check_flowroute(flowroute, client_ip, config):

@@ -2,14 +2,12 @@ __author__ = 'markus'
 
 
 from abstractcommand import AbstractCommand
-from flowroutebroker.protocol import replies
-from flowroutebroker.protocol.exceptions import EvaluationError
-from flowroutebroker.protocol.exceptions import SemanticError
-from flowroutebroker.protocol.exceptions import NotFoundError
-import flowroutebroker.security.commands
+from exabgpbrokerserver.flowroutebroker.protocol import replies
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import EvaluationError, SemanticError, NotFoundError
+import exabgpbrokerserver.flowroutebroker.security.commands
 
-from flowroutebroker.protocol import evaluators
-import exabgp
+from exabgpbrokerserver.flowroutebroker.protocol import evaluators
+from exabgpbrokerserver import exabgp
 
 
 class WITHDRAW (AbstractCommand):
@@ -38,7 +36,7 @@ class WITHDRAW (AbstractCommand):
             raise SemanticError()
 
         # Security Checks on Application Layer
-        flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
+        exabgpbrokerserver.flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
 
         try:
             api.withdraw_flow_route(flowroute)

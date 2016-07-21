@@ -1,11 +1,9 @@
 __author__ = 'markus'
 
 import threading
-import socket
+
 import protocol
 import protocol.replies
-
-from exabgp import FlowRoute
 
 
 class Worker (threading.Thread):

@@ -25,7 +25,7 @@ setup(
     version='0.1',
 
     description='A implementation of a broker service, which can be used by hosts to safely inject FlowSpec into an edge router',
-    long_description='',
+    long_description=long_description,
 
     # The project's main homepage.
     url='https://github.com/xxx',
@@ -63,7 +63,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    # packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
@@ -102,7 +102,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'exabgp-broker-server=core:main',
+            'exabgp-broker-server=exabgpbrokerserver.core:main',
         ],
     },
 )

@@ -2,7 +2,8 @@ __author__ = 'markus'
 
 import hmac
 import hashlib
-from flowroutebroker.protocol.exceptions import AuthError
+
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import AuthError
 
 
 class MessageAuthenticationCode:

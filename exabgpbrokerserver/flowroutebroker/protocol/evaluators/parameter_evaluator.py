@@ -1,8 +1,6 @@
 __author__ = 'markus'
 
-
-import exabgp
-from flowroutebroker.protocol.exceptions import SemanticError
+from exabgpbrokerserver import exabgp
 
 
 class ParameterEvaluator:

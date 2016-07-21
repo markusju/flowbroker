@@ -1,8 +1,8 @@
 __author__ = 'markus'
 
 from abstractcommand import AbstractCommand
-from flowroutebroker.protocol import replies
-from flowroutebroker.protocol.exceptions import EvaluationError
+from exabgpbrokerserver.flowroutebroker.protocol import replies
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import EvaluationError
 
 
 class VERSION (AbstractCommand):

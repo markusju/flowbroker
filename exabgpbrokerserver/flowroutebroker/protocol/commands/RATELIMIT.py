@@ -1,13 +1,12 @@
-import exabgp
-import flowroutebroker
+from exabgpbrokerserver import exabgp
 
 __author__ = 'markus'
 
 from abstractcommand import AbstractCommand
-from flowroutebroker.protocol import replies
-from flowroutebroker.protocol.exceptions import EvaluationError, SemanticError
-import flowroutebroker.security.commands
-from flowroutebroker.protocol import evaluators
+from exabgpbrokerserver.flowroutebroker.protocol import replies
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import EvaluationError, SemanticError
+import exabgpbrokerserver.flowroutebroker.security.commands
+from exabgpbrokerserver.flowroutebroker.protocol import evaluators
 
 
 class RATELIMIT (AbstractCommand):
@@ -34,7 +33,7 @@ class RATELIMIT (AbstractCommand):
             raise SemanticError()
 
         # Security Checks
-        flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
+        exabgpbrokerserver.flowroutebroker.security.commands.check_flowroute(flowroute, client_ip, config)
 
         api.announce_flow_route(flowroute)
 

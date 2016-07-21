@@ -1,7 +1,8 @@
 __author__ = 'markus'
 
 import yaml
-from exabgp.flowroute.flowroute import ip_cidr_pattern
+
+from exabgpbrokerserver.exabgp.flowroute.flowroute import ip_cidr_pattern
 from configexception import ConfigError
 
 
