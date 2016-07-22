@@ -1,6 +1,6 @@
 __author__ = 'markus'
 
-from exabgpbrokerserver import exabgp
+from exabgpbrokerserver import exabgpmods
 
 
 class ParameterEvaluator:
@@ -10,7 +10,7 @@ class ParameterEvaluator:
     """
 
     def __init__(self, flowroute, param_list):
-        if not isinstance(flowroute, exabgp.FlowRoute):
+        if not isinstance(flowroute, exabgpmods.FlowRoute):
             raise ValueError("flowroute must be of type FlowRoute")
 
         self.flowroute = flowroute

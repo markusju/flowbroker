@@ -5,7 +5,7 @@ import socket
 import replies
 import requestanalyzer
 import commands
-from flowroutebroker import security
+from exabgpbrokerserver.flowroutebroker import security
 from exceptions import EvaluationError
 from exceptions import SemanticError
 from exceptions import PermError

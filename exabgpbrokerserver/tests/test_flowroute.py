@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from exabgpbrokerserver import exabgp
+from exabgpbrokerserver import exabgpmods
 
 __author__ = 'markus'
 
@@ -8,7 +8,7 @@ __author__ = 'markus'
 class FlowRouteTest(TestCase):
 
     def setUp(self):
-        self.flowroute = exabgp.FlowRoute()
+        self.flowroute = exabgpmods.FlowRoute()
 
     def test_no_action(self):
         try:

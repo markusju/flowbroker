@@ -1,4 +1,4 @@
-from exabgpbrokerserver import exabgp
+from exabgpbrokerserver import exabgpmods
 
 __author__ = 'markus'
 
@@ -22,7 +22,7 @@ class RATELIMIT (AbstractCommand):
         client_ip = self.requestanalyzer.client_ip
 
         # Init FlowRoute
-        flowroute = exabgp.FlowRoute()
+        flowroute = exabgpmods.FlowRoute()
 
         try:
             flowroute.filter_action = "rate-limit "+ratelimit

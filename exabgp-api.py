@@ -1,3 +1,3 @@
-from exabgpbrokerserver import core
+import exabgpbrokerserver
 
-core.main()
+exabgpbrokerserver.main()

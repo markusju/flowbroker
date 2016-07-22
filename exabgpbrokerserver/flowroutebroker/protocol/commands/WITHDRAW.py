@@ -7,7 +7,7 @@ from exabgpbrokerserver.flowroutebroker.protocol.exceptions import EvaluationErr
 import exabgpbrokerserver.flowroutebroker.security.commands
 
 from exabgpbrokerserver.flowroutebroker.protocol import evaluators
-from exabgpbrokerserver import exabgp
+from exabgpbrokerserver import exabgpmods
 
 
 class WITHDRAW (AbstractCommand):
@@ -22,7 +22,7 @@ class WITHDRAW (AbstractCommand):
         param_list = self.requestanalyzer.parameters
 
         # Init FlowRoute
-        flowroute = exabgp.FlowRoute()
+        flowroute = exabgpmods.FlowRoute()
 
         # Does not matter, but flowroute requires it to be set
         flowroute.filter_action = "discard"

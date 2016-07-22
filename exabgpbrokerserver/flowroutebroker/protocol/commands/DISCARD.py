@@ -7,7 +7,7 @@ from exabgpbrokerserver.flowroutebroker.protocol.exceptions import SemanticError
 import exabgpbrokerserver.flowroutebroker.security.commands
 
 from exabgpbrokerserver.flowroutebroker.protocol import evaluators
-from exabgpbrokerserver import exabgp
+from exabgpbrokerserver import exabgpmods
 
 
 class DISCARD (AbstractCommand):
@@ -22,7 +22,7 @@ class DISCARD (AbstractCommand):
         param_list = self.requestanalyzer.parameters
 
         # Init FlowRoute
-        flowroute = exabgp.FlowRoute()
+        flowroute = exabgpmods.FlowRoute()
 
         flowroute.filter_action = "discard"
         try:

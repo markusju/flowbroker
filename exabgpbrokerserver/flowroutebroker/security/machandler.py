@@ -5,10 +5,10 @@ import datetime
 import pytz
 import dateutil.parser
 
-from flowroutebroker.protocol.replies import AbstractReply
+from exabgpbrokerserver.flowroutebroker.protocol.replies import AbstractReply
 from mac import MessageAuthenticationCode
 from exabgpbrokerserver.flowroutebroker.protocol.requestanalyzer import RequestAnalyzer
-from flowroutebroker.protocol.exceptions import AuthError
+from exabgpbrokerserver.flowroutebroker.protocol.exceptions import AuthError
 
 
 class MacHandler:

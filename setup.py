@@ -17,7 +17,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='exabgp-broker-server',
+    name='exabgpbrokerserver',
 
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
@@ -64,10 +64,10 @@ setup(
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-
+    #packages= ['exabgpbrokerserver'],
     # Alternatively, if you want to distribute just a my_module.py, uncomment
     # this:
-    #   py_modules=["my_module"],
+    #  py_modules=["exabgpbrokerserver"],
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's
@@ -102,7 +102,7 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'exabgp-broker-server=exabgpbrokerserver.core:main',
+            'exabgp-broker-server=exabgpbrokerserver:main',
         ],
     },
 )
