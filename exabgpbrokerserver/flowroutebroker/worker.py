@@ -30,5 +30,9 @@ class Worker (threading.Thread):
             self.sock.close()
 
     def stop_worker(self):
+        """
+        Stops the worker.
+        :return:
+        """
         self.sockfile.close()
         self.sock.close()

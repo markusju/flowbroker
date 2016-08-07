@@ -37,7 +37,6 @@ class ParameterEvaluator:
     def __process(self):
         """
         Processes a request's parameters
-        :return:
         """
         for paramkey, paramvalue in self.param_list.items():
             if paramkey not in self.params:

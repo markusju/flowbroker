@@ -14,6 +14,7 @@ class AbstractCommand:
         self.requestanalyzer = requestanalyzer
 
     @abstractmethod
+
     def get_method(self):
         pass
 
