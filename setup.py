@@ -28,7 +28,7 @@ setup(
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/xxx',
+    url='https://github.com/markusju/flowbroker',
 
     # Author details
     author='Markus Jungbluth',
